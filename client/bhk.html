@@ -1,0 +1,341 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Bengaluru Home Price Predictor | AI Powered Property Valuation</title>
+  <meta name="description" content="Estimate Bengaluru property prices instantly with a machine-learning regression model trained on local housing data." />
+
+  <!-- Google Fonts: Fraunces (display), Inter (body/UI), IBM Plex Mono (data readouts) -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600;9..144,700&family=Inter:wght@400;500;600;700&family=IBM+Plex+Mono:wght@500;600&display=swap" rel="stylesheet" />
+
+  <link rel="stylesheet" href="bhk.css" />
+</head>
+<body>
+
+  <!-- ============ NAVBAR ============ -->
+  <header class="navbar">
+    <div class="nav-container">
+      <a href="#home" class="brand">
+        <span class="brand-mark" aria-hidden="true">
+          <svg viewBox="0 0 32 32" width="30" height="30">
+            <circle cx="16" cy="16" r="4.5" fill="var(--brass-500)"></circle>
+            <circle cx="16" cy="16" r="9.5" fill="none" stroke="var(--forest-500)" stroke-width="1.6"></circle>
+            <circle cx="16" cy="16" r="14.5" fill="none" stroke="var(--forest-300)" stroke-width="1.2"></circle>
+          </svg>
+        </span>
+        <span class="brand-text">
+          <span class="brand-name">Bengaluru Home Price Predictor</span>
+          <span class="brand-badges">
+            <span class="brand-badge">AI Powered</span>
+            <span class="brand-badge brand-badge--muted">Namma Bengaluru</span>
+          </span>
+        </span>
+      </a>
+
+      <nav class="nav-links" id="navLinks">
+        <a href="#home">Home</a>
+        <a href="#predictor">Predictor</a>
+        <a href="#localities">Localities</a>
+        <a href="#about">About</a>
+      </nav>
+
+      <button class="nav-toggle" id="navToggle" aria-label="Toggle navigation menu" aria-expanded="false" aria-controls="navLinks">
+        <span></span><span></span><span></span>
+      </button>
+    </div>
+  </header>
+
+  <main>
+    <!-- ============ HERO ============ -->
+    <section class="hero" id="home">
+      <div class="hero-container">
+        <div class="hero-content">
+          <p class="eyebrow">Machine-Learning Property Valuation</p>
+          <h1 class="hero-heading">Find the Right Price for Your Bengaluru Home</h1>
+          <p class="hero-text">
+            This tool uses a regression model trained on Bengaluru housing data to estimate
+            what a property is worth &mdash; based on its location, size, bedrooms, and bathrooms.
+            Enter your details below and get an instant price estimate.
+          </p>
+          <a href="#predictor" class="btn btn-primary btn-large" id="heroCta">
+            Predict Home Price
+            <svg width="16" height="16" viewBox="0 0 16 16" aria-hidden="true"><path d="M3 8h9M8 3l5 5-5 5" stroke="currentColor" stroke-width="1.6" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          </a>
+          <p class="hero-meta" id="heroMeta"></p>
+        </div>
+
+        <div class="hero-visual" aria-hidden="true">
+          <!-- Signature visual: a scatter of Bengaluru listings settling around the model's fitted price line -->
+          <svg viewBox="0 0 440 360" width="100%" height="100%" id="regressionChart">
+            <line x1="46" y1="26" x2="46" y2="308" stroke="var(--hairline-strong)" stroke-width="1.5"></line>
+            <line x1="46" y1="308" x2="410" y2="308" stroke="var(--hairline-strong)" stroke-width="1.5"></line>
+            <text x="40" y="18" class="chart-axis-label" text-anchor="end">Price</text>
+            <text x="410" y="326" class="chart-axis-label" text-anchor="end">Sqft</text>
+
+            <path id="regressionLine" d="M60 274 C 150 214, 260 150, 396 70" fill="none" stroke="var(--brass-500)" stroke-width="2.5" stroke-linecap="round" pathLength="100"></path>
+
+            <g id="scatterDots" fill="var(--forest-500)">
+              <circle cx="78" cy="252" r="5"></circle>
+              <circle cx="96" cy="270" r="5"></circle>
+              <circle cx="118" cy="238" r="5"></circle>
+              <circle cx="140" cy="256" r="5"></circle>
+              <circle cx="150" cy="212" r="5"></circle>
+              <circle cx="176" cy="228" r="5"></circle>
+              <circle cx="192" cy="196" r="5"></circle>
+              <circle cx="210" cy="212" r="5"></circle>
+              <circle cx="228" cy="174" r="5"></circle>
+              <circle cx="252" cy="188" r="5"></circle>
+              <circle cx="268" cy="152" r="5"></circle>
+              <circle cx="288" cy="166" r="5"></circle>
+              <circle cx="306" cy="130" r="5"></circle>
+              <circle cx="326" cy="112" r="5"></circle>
+              <circle cx="344" cy="128" r="5"></circle>
+              <circle cx="362" cy="94" r="5"></circle>
+              <circle cx="380" cy="78" r="5"></circle>
+            </g>
+          </svg>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============ PREDICTOR ============ -->
+    <section class="predictor-section" id="predictor">
+      <div class="section-container">
+        <p class="eyebrow">Predictor</p>
+        <h2 class="section-heading">Estimate Your Property&rsquo;s Price</h2>
+        <p class="section-text">Fill in the details of the property and the model will return an instant estimate.</p>
+
+        <div id="globalAlert" class="alert alert-error is-hidden" role="alert"></div>
+
+        <div class="predictor-layout">
+          <form class="prediction-card" id="predictionForm" novalidate>
+
+            <div class="form-group">
+              <label for="locationSelect" class="form-label">Location</label>
+              <select id="locationSelect" name="location" class="form-select" required aria-describedby="locationError">
+                <option value="" data-placeholder="true">Loading locations&hellip;</option>
+              </select>
+              <p class="form-error" id="locationError"></p>
+            </div>
+
+            <div class="form-group">
+              <label for="sqftInput" class="form-label">Total Square Feet</label>
+              <input type="number" id="sqftInput" name="total_sqft" class="form-input" placeholder="1200" min="1" step="1" required aria-describedby="sqftError" />
+              <p class="form-error" id="sqftError"></p>
+            </div>
+
+            <div class="form-row">
+              <div class="form-group">
+                <label for="bhkSelect" class="form-label">BHK</label>
+                <select id="bhkSelect" name="bhk" class="form-select" required aria-describedby="bhkError">
+                  <option value="">Select BHK</option>
+                  <option value="1">1 BHK</option>
+                  <option value="2">2 BHK</option>
+                  <option value="3">3 BHK</option>
+                  <option value="4">4 BHK</option>
+                  <option value="5">5+ BHK</option>
+                </select>
+                <p class="form-error" id="bhkError"></p>
+              </div>
+
+              <div class="form-group">
+                <label for="bathSelect" class="form-label">Bathrooms</label>
+                <select id="bathSelect" name="bath" class="form-select" required aria-describedby="bathError">
+                  <option value="">Select Bathrooms</option>
+                  <option value="1">1</option>
+                  <option value="2">2</option>
+                  <option value="3">3</option>
+                  <option value="4">4+</option>
+                </select>
+                <p class="form-error" id="bathError"></p>
+              </div>
+            </div>
+
+            <button type="submit" class="btn btn-primary btn-full" id="predictBtn">
+              <span class="btn-label">Estimate Price</span>
+              <span class="btn-spinner" aria-hidden="true"></span>
+            </button>
+          </form>
+
+          <div class="result-card is-hidden" id="resultCard" aria-live="polite">
+            <p class="result-label">Estimated Property Price</p>
+            <p class="result-price" id="resultPrice">&mdash;</p>
+            <p class="price-per-sqft" id="pricePerSqft">&mdash;</p>
+            <p class="result-subtext">Based on the property details you provided.</p>
+
+            <div class="property-summary" id="propertySummary">
+              <div class="summary-item">
+                <span class="summary-icon" aria-hidden="true">
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none"><path d="M12 22s7-7.58 7-13A7 7 0 0 0 5 9c0 5.42 7 13 7 13Z" stroke="currentColor" stroke-width="1.7"/><circle cx="12" cy="9" r="2.4" stroke="currentColor" stroke-width="1.7"/></svg>
+                </span>
+                <span id="summaryLocation">&mdash;</span>
+              </div>
+              <div class="summary-item">
+                <span class="summary-icon" aria-hidden="true">
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none"><rect x="3.5" y="3.5" width="17" height="17" rx="1.5" stroke="currentColor" stroke-width="1.7"/><path d="M3.5 8.5h17M8.5 3.5v5" stroke="currentColor" stroke-width="1.7"/></svg>
+                </span>
+                <span id="summarySqft">&mdash;</span>
+              </div>
+              <div class="summary-item">
+                <span class="summary-icon" aria-hidden="true">
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none"><path d="M3 19v-6a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2v6M3 19h18M3 19v2M21 19v2M5 11V7a2 2 0 0 1 2-2h3v6" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"/></svg>
+                </span>
+                <span id="summaryBhk">&mdash;</span>
+              </div>
+              <div class="summary-item">
+                <span class="summary-icon" aria-hidden="true">
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none"><path d="M4 12h16v3a4 4 0 0 1-4 4H8a4 4 0 0 1-4-4v-3Z" stroke="currentColor" stroke-width="1.7"/><path d="M7 12V6.5A2.5 2.5 0 0 1 9.5 4c1 0 1.8.55 2.2 1.4M4 19v1.5M18 19v1.5" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"/></svg>
+                </span>
+                <span id="summaryBath">&mdash;</span>
+              </div>
+            </div>
+
+            <div class="emi-panel">
+              <p class="emi-title">EMI Calculator</p>
+
+              <div class="emi-row">
+                <label for="emiRate">Interest rate (% p.a.)</label>
+                <input type="number" id="emiRate" value="8.5" min="1" max="20" step="0.1" />
+              </div>
+
+              <div class="emi-row">
+                <label for="emiTenure">Loan tenure</label>
+                <select id="emiTenure">
+                  <option value="10">10 years</option>
+                  <option value="15">15 years</option>
+                  <option value="20" selected>20 years</option>
+                  <option value="25">25 years</option>
+                  <option value="30">30 years</option>
+                </select>
+              </div>
+
+              <div class="emi-output">
+                <span class="emi-output-label">Estimated Monthly EMI</span>
+                <span class="emi-output-value" id="emiValue">&mdash;</span>
+              </div>
+              <p class="emi-disclaimer">Illustrative only &mdash; assumes the full estimated price as loan amount with no down payment.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============ POPULAR LOCALITIES ============ -->
+    <section class="localities-section section--textured" id="localities">
+      <div class="section-container">
+        <p class="eyebrow">Explore</p>
+        <h2 class="section-heading">Popular Bengaluru Localities</h2>
+        <p class="section-text">Tap an area to jump straight to the predictor with it pre-selected &mdash; if it's in the current dataset.</p>
+
+        <div class="localities-grid">
+          <button type="button" class="locality-card" data-location="Whitefield">
+            <span class="locality-tag">IT Corridor</span>
+            <span class="locality-name">Whitefield</span>
+            <span class="locality-desc">Sprawling tech campuses, malls, and tree-lined layouts on the eastern edge of the city.</span>
+            <span class="locality-cta">Select this area &rarr;</span>
+          </button>
+
+          <button type="button" class="locality-card" data-location="Koramangala">
+            <span class="locality-tag">Startup Hub</span>
+            <span class="locality-name">Koramangala</span>
+            <span class="locality-desc">Bengaluru's startup epicentre, dense with cafés, co-working spaces, and young energy.</span>
+            <span class="locality-cta">Select this area &rarr;</span>
+          </button>
+
+          <button type="button" class="locality-card" data-location="Indiranagar">
+            <span class="locality-tag">Nightlife &amp; Cafés</span>
+            <span class="locality-name">Indiranagar</span>
+            <span class="locality-desc">Leafy residential streets that open onto some of the city's liveliest restaurants and bars.</span>
+            <span class="locality-cta">Select this area &rarr;</span>
+          </button>
+
+          <button type="button" class="locality-card" data-location="Jayanagar">
+            <span class="locality-tag">Traditional Bengaluru</span>
+            <span class="locality-name">Jayanagar</span>
+            <span class="locality-desc">One of the city's oldest planned neighbourhoods &mdash; quiet, green, and deeply residential.</span>
+            <span class="locality-cta">Select this area &rarr;</span>
+          </button>
+
+          <button type="button" class="locality-card" data-location="HSR Layout">
+            <span class="locality-tag">Tech Belt</span>
+            <span class="locality-name">HSR Layout</span>
+            <span class="locality-desc">A favourite with young professionals, sitting right along the Outer Ring Road tech corridor.</span>
+            <span class="locality-cta">Select this area &rarr;</span>
+          </button>
+
+          <button type="button" class="locality-card" data-location="JP Nagar">
+            <span class="locality-tag">Family Friendly</span>
+            <span class="locality-name">JP Nagar</span>
+            <span class="locality-desc">A well-established residential neighbourhood with parks, schools, and easy metro access.</span>
+            <span class="locality-cta">Select this area &rarr;</span>
+          </button>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============ HOW IT WORKS ============ -->
+    <section class="how-section">
+      <div class="section-container">
+        <p class="eyebrow">Process</p>
+        <h2 class="section-heading">How It Works</h2>
+
+        <div class="steps-grid">
+          <div class="step-card">
+            <span class="step-number">01</span>
+            <h3 class="step-title">Enter Property Details</h3>
+            <p class="step-text">Tell us the location, size, BHK, and number of bathrooms.</p>
+          </div>
+          <div class="step-card">
+            <span class="step-number">02</span>
+            <h3 class="step-title">Model Analyzes the Data</h3>
+            <p class="step-text">A regression model trained on Bengaluru listings evaluates your inputs.</p>
+          </div>
+          <div class="step-card">
+            <span class="step-number">03</span>
+            <h3 class="step-title">Get an Estimated Price</h3>
+            <p class="step-text">Receive an instant price estimate for your property.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============ ABOUT ============ -->
+    <section class="about-section" id="about">
+      <div class="section-container about-grid">
+        <div class="about-text">
+          <p class="eyebrow">About the Project</p>
+          <h2 class="section-heading">Bengaluru Home Price Predictor</h2>
+          <p class="section-text">
+            This application uses a machine-learning regression model trained on Bengaluru
+            housing data to estimate property prices based on location, area, BHK, and
+            number of bathrooms.
+          </p>
+          <p class="section-text">
+            The result is an estimate, not an appraisal. Actual property prices can vary
+            based on factors such as property condition, exact location, amenities, age of
+            the building, and current market conditions.
+          </p>
+        </div>
+        <div class="about-badges">
+          <span class="about-badge">Regression Model</span>
+          <span class="about-badge">Location-Aware</span>
+          <span class="about-badge">Instant Estimates</span>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- ============ FOOTER ============ -->
+  <footer class="footer">
+    <div class="footer-container">
+      <p class="footer-brand">Bengaluru Home Price Predictor</p>
+      <p class="footer-tagline">Built with Python &bull; Flask &bull; Machine Learning &mdash; Made in the Garden City</p>
+    </div>
+  </footer>
+
+  <script src="bhk.js"></script>
+</body>
+</html>
