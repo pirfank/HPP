@@ -300,34 +300,64 @@ button { font-family: inherit; }
    Hero
    ========================================================================== */
 
-.hero { padding: 64px 0 88px; background: radial-gradient(1200px 500px at 15% -10%, rgba(198, 150, 60, 0.10), transparent 60%), var(--bg-950); }
+.hero {
+  position: relative;
+  overflow: hidden;
+  padding: 96px 0 110px;
+  min-height: 620px;
+  display: flex;
+  align-items: center;
+  background:
+    radial-gradient(760px 520px at 78% 30%, rgba(255, 221, 140, 0.30), transparent 62%),
+    linear-gradient(180deg, #241B3D 0%, #8A3F5C 45%, #D9713F 78%, #EFA23E 100%);
+}
+
+/* The per-city SVG landmark, anchored to the bottom-right of the hero as
+   a backdrop. It's sized to a fraction of the hero (not the full inset)
+   so the illustration reads as a scene element rather than dominating the
+   frame; preserveAspectRatio="xMaxYMax meet" (set on the svg itself) then
+   keeps the whole thing in frame -- never cropped -- within that box. */
+.hero-visual {
+  position: absolute;
+  right: 0;
+  bottom: 0;
+  width: 52%;
+  height: 62%;
+  z-index: 0;
+}
+
+.hero-visual svg { width: 100%; height: 100%; display: block; }
+
+/* Scrim: darkens the left side for text legibility, and fades the bottom
+   edge into the page background so the hero blends into the next section
+   instead of ending on a hard line. */
+.hero::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background:
+    linear-gradient(90deg, var(--bg-950) 0%, rgba(12, 19, 14, 0.8) 28%, rgba(12, 19, 14, 0.2) 54%, transparent 72%),
+    linear-gradient(180deg, transparent 68%, var(--bg-950) 100%);
+  pointer-events: none;
+  z-index: 1;
+}
 
 .hero-container {
+  position: relative;
+  z-index: 2;
   max-width: var(--max-width);
   margin: 0 auto;
   padding: 0 32px;
-  display: grid;
-  grid-template-columns: 1.05fr 0.95fr;
-  gap: 56px;
-  align-items: center;
+  width: 100%;
 }
+
+.hero-content { max-width: 560px; }
 
 .hero-heading { font-size: clamp(34px, 4.6vw, 54px); font-weight: 600; margin-bottom: 20px; letter-spacing: -0.01em; }
 .hero-text { font-size: 17px; color: var(--sage-200); max-width: 480px; margin-bottom: 14px; }
 
 .hero-meta { font-family: var(--font-mono); font-size: 12.5px; color: var(--sage-400); margin-top: 14px; min-height: 18px; }
 .hero-meta strong { color: var(--brass-400); font-weight: 600; }
-
-.hero-visual {
-  background: var(--surface-1);
-  border: 1px solid var(--hairline);
-  border-radius: var(--radius-lg);
-  box-shadow: var(--shadow-md);
-  padding: 20px;
-  min-height: 320px;
-}
-
-.landmark-svg { width: 100%; height: 100%; }
 
 .landmark-illustration {
   opacity: 0;
@@ -625,8 +655,13 @@ button { font-family: inherit; }
    ========================================================================== */
 
 @media (max-width: 960px) {
-  .hero-container { grid-template-columns: 1fr; gap: 40px; }
-  .hero-visual { max-width: 460px; }
+  .hero { min-height: 540px; }
+  .hero-visual { width: 78%; height: 46%; opacity: 0.6; }
+  .hero::after {
+    background:
+      linear-gradient(180deg, rgba(12, 19, 14, 0.35) 0%, rgba(12, 19, 14, 0.55) 55%, var(--bg-950) 100%);
+  }
+  .hero-content { max-width: 100%; }
   .predictor-layout { grid-template-columns: 1fr; }
   .about-grid { grid-template-columns: 1fr; }
   .about-badges { flex-direction: row; flex-wrap: wrap; }

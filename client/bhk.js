@@ -6,8 +6,9 @@
    ARCHITECTURE
    ------------
    CITIES is the single source of truth for every city's content. Only
-   Bengaluru currently has `available: true` and real endpoint paths — every
-   other city has `available: false` and `endpoint: null`. selectCity()
+   Bengaluru and Chennai currently have `available: true` and real endpoint
+   paths — every other city has `available: false` and `endpoint: null`.
+   selectCity()
    re-renders the page from this object; nothing city-specific is hardcoded
    in bhk.html beyond element ids to populate.
 
@@ -19,7 +20,7 @@
 (function () {
   'use strict';
 
-  var API_BASE = 'http://127.0.0.1:5000'; // Flask's port. See the note in loadBengaluruLocations().
+  var API_BASE = 'http://127.0.0.1:5000'; // Flask's port. See the note in loadCityLocations().
 
   /* ------------------------------------------------------------------
      City configuration — the single source of truth for page content.
@@ -105,9 +106,9 @@
       name: 'Chennai',
       epithet: 'Gateway to South India',
       description: 'A major industrial and IT hub on the Bay of Bengal, anchored by a deep-rooted Tamil culture. The IT Corridor along OMR has reshaped much of the city\u2019s southern real estate map.',
-      available: false,
-      endpoint: null,
-      locationsEndpoint: null,
+      available: true,
+      endpoint: '/predict_home_price',
+      locationsEndpoint: '/get_location_names',
       localities: [
         { name: 'OMR', tag: 'IT Corridor', desc: "Chennai's IT Corridor \u2014 a long stretch of tech parks, campuses, and new apartment complexes." },
         { name: 'Adyar', tag: 'Upscale Residential', desc: 'An upscale, leafy residential neighbourhood along the Adyar river.' },
@@ -264,146 +265,292 @@
   var CITY_ORDER = ['bengaluru', 'mumbai', 'delhi', 'hyderabad', 'chennai', 'kolkata', 'pune', 'ahmedabad', 'jaipur', 'lucknow', 'chandigarh', 'kochi', 'vizag'];
 
   /* ------------------------------------------------------------------
-     Landmark illustrations — minimalist line-art, one per city.
-     Each is just the inner <g> content; heroVisualShell() wraps it with
-     a shared glow + ground line so every city feels like one design
-     system rather than 13 different ones.
+     Landmark illustrations — one per city. Each uses its own light-to-dark
+     material gradient (that city's real stone/metal/wood colour, shaded
+     rather than flat) for structural mass, plus flat accent colours for
+     highlights, water, and small detail. heroVisualShell() wraps every
+     one with a shared sunset sky, a faint distant skyline, and a couple
+     of birds, so all 13 read as one consistent scene rather than an
+     object floating on a gradient.
      ------------------------------------------------------------------ */
 
+  function materialGradient(light, dark) {
+    return '<defs><linearGradient id="matGrad" x1="0" y1="0" x2="1" y2="1">' +
+      '<stop offset="0%" stop-color="' + light + '"/>' +
+      '<stop offset="100%" stop-color="' + dark + '"/>' +
+      '</linearGradient></defs>';
+  }
+
   var LANDMARKS = {
-    // Vidhana Soudha — domed legislature with a colonnaded base
+    // Vidhana Soudha — shaded grey granite, colonnaded base, central dome, two flanking cupolas
     bengaluru:
-      '<rect x="110" y="235" width="220" height="65"/>' +
-      '<line x1="125" y1="235" x2="125" y2="300"/><line x1="150" y1="235" x2="150" y2="300"/>' +
-      '<line x1="175" y1="235" x2="175" y2="300"/><line x1="200" y1="235" x2="200" y2="300"/>' +
-      '<line x1="240" y1="235" x2="240" y2="300"/><line x1="265" y1="235" x2="265" y2="300"/>' +
-      '<line x1="290" y1="235" x2="290" y2="300"/><line x1="315" y1="235" x2="315" y2="300"/>' +
-      '<rect x="193" y="196" width="54" height="39"/>' +
-      '<path d="M193 196 A27 27 0 0 1 247 196"/>' +
-      '<line x1="220" y1="169" x2="220" y2="150"/><circle cx="220" cy="146" r="4"/>' +
-      '<path d="M150 235 A16 16 0 0 1 182 235" transform="translate(-30,0)"/>' +
-      '<path d="M258 235 A16 16 0 0 1 290 235" transform="translate(30,0)"/>' +
-      '<line x1="95" y1="300" x2="345" y2="300"/><line x1="85" y1="310" x2="355" y2="310"/>',
+      materialGradient('#D9E2DE', '#748680') +
+      '<rect x="55" y="228" width="330" height="72" fill="url(#matGrad)"/>' +
+      '<g stroke-width="1.2">' +
+      '<line x1="70" y1="228" x2="70" y2="300"/><line x1="95" y1="228" x2="95" y2="300"/>' +
+      '<line x1="120" y1="228" x2="120" y2="300"/><line x1="145" y1="228" x2="145" y2="300"/>' +
+      '<line x1="170" y1="228" x2="170" y2="300"/><line x1="270" y1="228" x2="270" y2="300"/>' +
+      '<line x1="295" y1="228" x2="295" y2="300"/><line x1="320" y1="228" x2="320" y2="300"/>' +
+      '<line x1="345" y1="228" x2="345" y2="300"/><line x1="368" y1="228" x2="368" y2="300"/>' +
+      '</g>' +
+      '<path d="M165 188 L220 163 L275 188 Z" fill="url(#matGrad)"/>' +
+      '<rect x="165" y="188" width="110" height="42" fill="url(#matGrad)"/>' +
+      '<g stroke-width="1.2"><line x1="182" y1="188" x2="182" y2="230"/><line x1="202" y1="188" x2="202" y2="230"/>' +
+      '<line x1="238" y1="188" x2="238" y2="230"/><line x1="258" y1="188" x2="258" y2="230"/></g>' +
+      '<rect x="188" y="145" width="64" height="40" fill="url(#matGrad)"/>' +
+      '<path d="M188 145 A32 32 0 0 1 252 145 Z" fill="url(#matGrad)"/>' +
+      '<g stroke-width="1"><path d="M204 145 A16 32 0 0 1 206 116"/><path d="M220 145 V113"/><path d="M236 145 A16 32 0 0 1 234 116"/></g>' +
+      '<line x1="220" y1="113" x2="220" y2="96"/><circle cx="220" cy="90" r="4.5" fill="#D9603A"/>' +
+      '<rect x="118" y="178" width="30" height="24" fill="url(#matGrad)"/>' +
+      '<path d="M118 178 A15 15 0 0 1 148 178 Z" fill="url(#matGrad)"/>' +
+      '<line x1="133" y1="163" x2="133" y2="152"/><circle cx="133" cy="149" r="3" fill="#D9603A"/>' +
+      '<rect x="292" y="178" width="30" height="24" fill="url(#matGrad)"/>' +
+      '<path d="M292 178 A15 15 0 0 1 322 178 Z" fill="url(#matGrad)"/>' +
+      '<line x1="307" y1="163" x2="307" y2="152"/><circle cx="307" cy="149" r="3" fill="#D9603A"/>' +
+      '<g opacity="0.5"><path d="M40 300 Q46 280 42 262" stroke="#3F5A46" stroke-width="3"/><path d="M400 300 Q394 282 398 264" stroke="#3F5A46" stroke-width="3"/></g>' +
+      '<rect x="45" y="300" width="350" height="8" fill="#5A6D66"/>' +
+      '<rect x="35" y="308" width="370" height="8" fill="#465751"/>',
 
-    // Charminar — four minarets around a grand central arch
+    // Gateway of India — shaded ochre basalt, dome integrated at the peak, turrets at the shoulders, turquoise sea
     mumbai:
-      // Gateway of India — central arch with corner turret domes, near water
-      '<rect x="180" y="150" width="80" height="150"/>' +
-      '<path d="M180 220 A40 40 0 0 1 260 220" fill="none"/>' +
-      '<circle cx="180" cy="150" r="9"/><line x1="180" y1="141" x2="180" y2="126"/>' +
-      '<circle cx="260" cy="150" r="9"/><line x1="260" y1="141" x2="260" y2="126"/>' +
-      '<rect x="150" y="300" width="140" height="14"/>' +
-      '<path d="M60 312 Q100 302 140 312 T220 312 T300 312 T380 312"/>' +
-      '<path d="M60 322 Q100 314 140 322 T220 322 T300 322 T380 322"/>',
+      materialGradient('#F3CC7A', '#9E6C24') +
+      '<path d="M155 300 V160 A65 65 0 0 1 285 160 V300 Z" fill="url(#matGrad)"/>' +
+      '<path d="M180 300 V195 A40 40 0 0 1 260 195 V300"/>' +
+      '<rect x="200" y="76" width="40" height="20" fill="url(#matGrad)"/>' +
+      '<path d="M200 76 A20 22 0 0 1 240 76 Z" fill="url(#matGrad)"/>' +
+      '<line x1="220" y1="54" x2="220" y2="38"/><circle cx="220" cy="33" r="4" fill="#FBEFD2"/>' +
+      '<circle cx="178" cy="150" r="9" fill="url(#matGrad)"/><line x1="178" y1="141" x2="178" y2="128"/><circle cx="178" cy="124" r="2.5" fill="#FBEFD2"/>' +
+      '<circle cx="262" cy="150" r="9" fill="url(#matGrad)"/><line x1="262" y1="141" x2="262" y2="128"/><circle cx="262" cy="124" r="2.5" fill="#FBEFD2"/>' +
+      '<g stroke-width="1"><circle cx="190" cy="215" r="3"/><circle cx="250" cy="215" r="3"/></g>' +
+      '<rect x="130" y="300" width="180" height="10" fill="url(#matGrad)"/>' +
+      '<rect x="115" y="310" width="210" height="8" fill="#7A5A1E"/>' +
+      '<path d="M30 322 Q90 312 150 322 T270 322 T390 322" stroke="#2FB0AC" stroke-width="1.3"/>' +
+      '<path d="M30 334 Q90 326 150 334 T270 334 T390 334" stroke="#2FB0AC" stroke-width="1.3"/>' +
+      '<path d="M330 316 L370 316 L362 324 L338 324 Z" fill="url(#matGrad)"/>' +
+      '<line x1="352" y1="316" x2="352" y2="300"/><path d="M352 300 L364 314 L352 314 Z" fill="url(#matGrad)"/>',
 
+    // India Gate — shaded red sandstone, a solitary arch on a stepped plinth
     delhi:
-      // India Gate — a solitary arch on a stepped plinth
-      '<path d="M180 300 V180 A40 40 0 0 1 260 180 V300"/>' +
-      '<line x1="180" y1="235" x2="260" y2="235"/>' +
-      '<rect x="160" y="300" width="120" height="10"/>' +
-      '<rect x="150" y="310" width="140" height="10"/>',
+      materialGradient('#E6A181', '#98432D') +
+      '<path d="M160 300 V150 A60 60 0 0 1 280 150 V300 Z" fill="url(#matGrad)"/>' +
+      '<path d="M186 300 V185 A34 34 0 0 1 254 185 V300"/>' +
+      '<line x1="160" y1="230" x2="186" y2="230"/><line x1="254" y1="230" x2="280" y2="230"/>' +
+      '<g stroke-width="1"><line x1="164" y1="200" x2="276" y2="200"/><line x1="164" y1="210" x2="276" y2="210"/></g>' +
+      '<rect x="140" y="300" width="160" height="10" fill="url(#matGrad)"/>' +
+      '<rect x="125" y="310" width="190" height="8" fill="#7A3F2C"/>' +
+      '<rect x="112" y="320" width="216" height="8" fill="#602F20"/>' +
+      '<line x1="220" y1="150" x2="220" y2="126"/><circle cx="220" cy="120" r="4" fill="#FBEFD2"/>',
 
+    // Charminar — shaded pale grey-green granite, four bold minarets with bulbous domes, grand central arch
     hyderabad:
-      '<rect x="100" y="220" width="24" height="80"/><path d="M100 220 A12 12 0 0 1 124 220"/><line x1="112" y1="208" x2="112" y2="198"/>' +
-      '<rect x="316" y="220" width="24" height="80"/><path d="M316 220 A12 12 0 0 1 340 220"/><line x1="328" y1="208" x2="328" y2="198"/>' +
-      '<rect x="168" y="150" width="20" height="150"/><path d="M168 150 A10 10 0 0 1 188 150"/><line x1="178" y1="140" x2="178" y2="130"/>' +
-      '<rect x="252" y="150" width="20" height="150"/><path d="M252 150 A10 10 0 0 1 272 150"/><line x1="262" y1="140" x2="262" y2="130"/>' +
-      '<path d="M188 300 V220 A32 32 0 0 1 252 220 V300"/>' +
-      '<path d="M205 260 A15 15 0 0 1 235 260"/>',
-
-    chennai:
-      // Gopuram — a stepped temple tower
-      '<path d="M175 300 L265 300 L258 275 L182 275 Z"/>' +
-      '<path d="M182 275 L258 275 L251 252 L189 252 Z"/>' +
-      '<path d="M189 252 L251 252 L245 231 L195 231 Z"/>' +
-      '<path d="M195 231 L245 231 L239 212 L201 212 Z"/>' +
-      '<path d="M201 212 L239 212 L233 195 L207 195 Z"/>' +
-      '<path d="M212 195 L228 195 L220 178 Z"/>' +
-      '<circle cx="220" cy="170" r="5"/>',
-
-    kolkata:
-      // Howrah Bridge — cantilever truss between two pylons
-      '<rect x="90" y="150" width="18" height="150"/>' +
-      '<rect x="332" y="150" width="18" height="150"/>' +
-      '<path d="M108 160 L160 200 L212 160 L264 200 L332 160"/>' +
-      '<path d="M108 190 L160 160 L212 190 L264 160 L332 190"/>' +
-      '<line x1="90" y1="230" x2="350" y2="230"/>' +
-      '<path d="M50 300 Q100 292 150 300 T250 300 T350 300 T390 300"/>',
-
-    pune:
-      // Shaniwar Wada — fortified gate with bastion towers
-      '<rect x="110" y="210" width="55" height="90"/>' +
-      '<rect x="275" y="210" width="55" height="90"/>' +
-      '<path d="M110 210 h10 v-8 h10 v8 h10 v-8 h10 v8 h15" />' +
-      '<path d="M275 210 h10 v-8 h10 v8 h10 v-8 h10 v8 h15" />' +
-      '<path d="M175 300 V190 A45 45 0 0 1 265 190 V300"/>' +
-      '<line x1="195" y1="230" x2="195" y2="290"/><line x1="220" y1="230" x2="220" y2="290"/><line x1="245" y1="230" x2="245" y2="290"/>' +
-      '<line x1="185" y1="245" x2="255" y2="245"/><line x1="185" y1="265" x2="255" y2="265"/>',
-
-    ahmedabad:
-      // Sidi Saiyyed jali — an arch containing a branching "tree of life" lattice
-      '<path d="M150 300 V160 A70 70 0 0 1 290 160 V300"/>' +
-      '<line x1="220" y1="300" x2="220" y2="200"/>' +
-      '<path d="M220 260 L190 230 M220 260 L250 230 M220 230 L198 205 M220 230 L242 205 M220 200 L205 180 M220 200 L235 180"/>' +
-      '<path d="M220 245 L200 260 M220 245 L240 260 M220 215 L203 225 M220 215 L237 225"/>',
-
-    jaipur:
-      // Hawa Mahal — honeycomb grid of small jharokha windows
-      '<rect x="120" y="140" width="200" height="160"/>' +
-      '<path d="M120 140 Q140 125 160 140 T200 140 T240 140 T280 140 T320 140"/>' +
+      materialGradient('#E2E5D2', '#8A9576') +
       (function () {
-        var rows = [165, 195, 225, 255];
-        var cols = [145, 180, 215, 250, 285];
         var out = '';
-        rows.forEach(function (y) {
-          cols.forEach(function (x) {
-            out += '<path d="M' + (x - 8) + ' ' + (y + 10) + ' V' + y + ' A8 8 0 0 1 ' + (x + 8) + ' ' + y + ' V' + (y + 10) + '"/>';
-          });
+        var minarets = [{ cx: 78, topY: 145, w: 18 }, { cx: 172, topY: 108, w: 20 }, { cx: 268, topY: 108, w: 20 }, { cx: 362, topY: 145, w: 18 }];
+        minarets.forEach(function (m) {
+          var h = 300 - m.topY, hw = m.w / 2;
+          out += '<rect x="' + (m.cx - hw) + '" y="' + m.topY + '" width="' + m.w + '" height="' + h + '" fill="url(#matGrad)"/>';
+          out += '<rect x="' + (m.cx - hw - 3) + '" y="' + (m.topY + h * 0.32) + '" width="' + (m.w + 6) + '" height="5" fill="url(#matGrad)"/>';
+          out += '<rect x="' + (m.cx - hw - 3) + '" y="' + (m.topY + h * 0.64) + '" width="' + (m.w + 6) + '" height="5" fill="url(#matGrad)"/>';
+          out += '<path d="M' + (m.cx - hw - 2) + ' ' + m.topY + ' C ' + (m.cx - hw - 9) + ' ' + (m.topY - 12) + ', ' + (m.cx - hw * 0.5) + ' ' + (m.topY - 28) + ', ' + m.cx + ' ' + (m.topY - 32) +
+            ' C ' + (m.cx + hw * 0.5) + ' ' + (m.topY - 28) + ', ' + (m.cx + hw + 9) + ' ' + (m.topY - 12) + ', ' + (m.cx + hw + 2) + ' ' + m.topY + ' Z" fill="url(#matGrad)"/>';
+          out += '<line x1="' + m.cx + '" y1="' + (m.topY - 32) + '" x2="' + m.cx + '" y2="' + (m.topY - 46) + '"/><circle cx="' + m.cx + '" cy="' + (m.topY - 49) + '" r="3" fill="#FBEFD2"/>';
         });
+        return out;
+      })() +
+      '<rect x="165" y="205" width="110" height="95" fill="url(#matGrad)"/>' +
+      '<path d="M183 300 V237 A37 37 0 0 1 257 237 V300"/>' +
+      '<g stroke-width="1.1"><path d="M165 205 A24 22 0 0 1 209 205"/><path d="M213 205 A11 22 0 0 1 227 205"/><path d="M231 205 A24 22 0 0 1 275 205"/></g>' +
+      '<circle cx="220" cy="222" r="8" fill="none" stroke-width="1"/>' +
+      '<g stroke-width="1"><path d="M165 205 h10 v-8 h9 v8 h9 v-8 h9 v8 h9 v-8 h9 v8 h9 v-8 h9 v8 h10"/></g>',
+
+    // Gopuram — a stepped temple tower painted in the vivid multi-colour palette real gopurams use
+    chennai:
+      (function () {
+        var tiers = [
+          { yb: 300, yt: 275, wb: 112, wt: 96, c1: '#D96A54', c2: '#A0392A' },
+          { yb: 275, yt: 252, wb: 96, wt: 82, c1: '#5AA6C4', c2: '#2C5E76' },
+          { yb: 252, yt: 231, wb: 82, wt: 70, c1: '#4FAF8E', c2: '#256150' },
+          { yb: 231, yt: 212, wb: 70, wt: 58, c1: '#EBC066', c2: '#A9782A' },
+          { yb: 212, yt: 195, wb: 58, wt: 46, c1: '#D07FA8', c2: '#8E4166' },
+          { yb: 195, yt: 180, wb: 46, wt: 34, c1: '#F0E4C0', c2: '#B7A26E' }
+        ];
+        var cx = 220, out = '';
+        tiers.forEach(function (t, i) {
+          var gid = 'tier' + i;
+          out += '<defs><linearGradient id="' + gid + '" x1="0" y1="0" x2="1" y2="1">' +
+            '<stop offset="0%" stop-color="' + t.c1 + '"/><stop offset="100%" stop-color="' + t.c2 + '"/></linearGradient></defs>';
+          var x1b = cx - t.wb / 2, x2b = cx + t.wb / 2, x1t = cx - t.wt / 2, x2t = cx + t.wt / 2;
+          out += '<path d="M' + x1b + ' ' + t.yb + ' L' + x2b + ' ' + t.yb + ' L' + x2t + ' ' + t.yt + ' L' + x1t + ' ' + t.yt + ' Z" fill="url(#' + gid + ')"/>';
+          var nicheCount = 5 - Math.min(i, 3);
+          for (var n = 0; n < nicheCount; n++) {
+            var nx = x1b + (x2b - x1b) * (n + 0.5) / nicheCount;
+            out += '<line x1="' + nx + '" y1="' + (t.yb - 4) + '" x2="' + nx + '" y2="' + (t.yb - 11) + '" stroke-width="1"/>';
+          }
+        });
+        out += '<path d="M204 180 L236 180 L220 160 Z" fill="#EBC066"/>';
+        out += '<circle cx="220" cy="153" r="5" fill="#FBEFD2"/>';
+        out += '<rect x="195" y="300" width="50" height="10" fill="#8A5A38"/>';
         return out;
       })(),
 
+    // Howrah Bridge — shaded grey steel, a dense cantilever truss between two pylons, muddy river
+    kolkata:
+      materialGradient('#C7D8E1', '#5C7686') +
+      '<rect x="82" y="140" width="22" height="160" fill="url(#matGrad)"/>' +
+      '<rect x="336" y="140" width="22" height="160" fill="url(#matGrad)"/>' +
+      '<g stroke-width="1.3">' +
+      '<path d="M104 155 L150 190 L196 155 L242 190 L288 155 L336 190"/>' +
+      '<path d="M104 185 L150 155 L196 185 L242 155 L288 185 L336 155"/>' +
+      '<path d="M104 210 L150 235 L196 210 L242 235 L288 210 L336 235"/>' +
+      '<path d="M104 240 L150 210 L196 240 L242 210 L288 240 L336 210"/>' +
+      '</g>' +
+      '<rect x="82" y="245" width="276" height="10" fill="url(#matGrad)"/>' +
+      '<path d="M40 300 Q95 290 150 300 T260 300 T370 300 T410 300" stroke="#6B7A4A" stroke-width="1.3"/>' +
+      '<path d="M40 312 Q95 304 150 312 T260 312 T370 312 T410 312" stroke="#6B7A4A" stroke-width="1.3"/>' +
+      '<path d="M395 296 L420 296 L412 304 L400 304 Z" fill="url(#matGrad)"/>',
+
+    // Shaniwar Wada — shaded red laterite stone, fortified gate, bastion towers, iron-studded door
+    pune:
+      materialGradient('#E29368', '#8A3F26') +
+      '<rect x="95" y="205" width="65" height="95" fill="url(#matGrad)"/>' +
+      '<rect x="280" y="205" width="65" height="95" fill="url(#matGrad)"/>' +
+      '<g stroke-width="1.1"><path d="M95 205 h11 v-9 h11 v9 h11 v-9 h11 v9 h11 v-9 h10"/></g>' +
+      '<g stroke-width="1.1"><path d="M280 205 h11 v-9 h11 v9 h11 v-9 h11 v9 h11 v-9 h10"/></g>' +
+      '<path d="M170 300 V185 A50 50 0 0 1 270 185 V300 Z" fill="url(#matGrad)"/>' +
+      '<path d="M188 300 V210 A32 32 0 0 1 252 210 V300"/>' +
+      '<g stroke-width="1">' +
+      '<circle cx="196" cy="230" r="2.5" fill="#3A2810"/><circle cx="196" cy="250" r="2.5" fill="#3A2810"/><circle cx="196" cy="270" r="2.5" fill="#3A2810"/>' +
+      '<circle cx="220" cy="220" r="2.5" fill="#3A2810"/><circle cx="220" cy="240" r="2.5" fill="#3A2810"/><circle cx="220" cy="260" r="2.5" fill="#3A2810"/><circle cx="220" cy="280" r="2.5" fill="#3A2810"/>' +
+      '<circle cx="244" cy="230" r="2.5" fill="#3A2810"/><circle cx="244" cy="250" r="2.5" fill="#3A2810"/><circle cx="244" cy="270" r="2.5" fill="#3A2810"/>' +
+      '</g>' +
+      '<rect x="75" y="300" width="290" height="8" fill="#6B331C"/>',
+
+    // Sidi Saiyyed jali — shaded cream sandstone, a grand arch containing a dense branching "tree of life" lattice
+    ahmedabad:
+      materialGradient('#F5E8C2', '#B0925A') +
+      '<path d="M140 300 V150 A80 80 0 0 1 300 150 V300 Z" fill="url(#matGrad)"/>' +
+      '<path d="M140 300 V150 A80 80 0 0 1 300 150 V300"/>' +
+      '<g stroke-width="1.3">' +
+      '<line x1="220" y1="300" x2="220" y2="178"/>' +
+      '<path d="M220 285 L188 255 M220 285 L252 255 M220 258 L192 232 M220 258 L248 232 M220 232 L196 210 M220 232 L244 210 M220 208 L200 188 M220 208 L240 188 M220 186 L204 172 M220 186 L236 172"/>' +
+      '<path d="M220 272 L198 288 M220 272 L242 288 M220 246 L200 262 M220 246 L240 262 M220 220 L202 234 M220 220 L238 234 M220 197 L206 208 M220 197 L234 208"/>' +
+      '</g>' +
+      '<g stroke-width="0.9">' +
+      '<path d="M188 255 L172 240 M188 255 L178 270 M252 255 L268 240 M252 255 L262 270"/>' +
+      '<path d="M192 232 L178 220 M248 232 L262 220"/>' +
+      '</g>' +
+      '<path d="M150 172 Q220 142 290 172" stroke-width="1"/>' +
+      '<path d="M155 158 Q220 132 285 158" stroke-width="1"/>',
+
+    // Hawa Mahal — shaded rose-pink sandstone, a dense honeycomb facade of jharokha windows
+    jaipur:
+      materialGradient('#F5B9B9', '#B85D5D') +
+      '<rect x="110" y="130" width="220" height="170" fill="url(#matGrad)"/>' +
+      '<path d="M110 130 Q128 116 146 130 T182 130 T218 130 T254 130 T290 130 T326 130" stroke-width="1.2"/>' +
+      (function () {
+        var rows = [155, 182, 209, 236, 263];
+        var cols = [130, 160, 190, 220, 250, 280, 310];
+        var out = '';
+        rows.forEach(function (y) {
+          cols.forEach(function (x) {
+            out += '<path d="M' + (x - 7) + ' ' + (y + 9) + ' V' + y + ' A7 7 0 0 1 ' + (x + 7) + ' ' + y + ' V' + (y + 9) + '" stroke-width="1"/>';
+          });
+        });
+        return out;
+      })() +
+      '<g stroke-width="1"><path d="M118 130 v-10 M150 130 v-10 M182 130 v-10 M214 130 v-10 M246 130 v-10 M278 130 v-10 M322 130 v-10"/></g>',
+
+    // Rumi Darwaza — shaded warm terracotta, a tall gateway with a scalloped crown and side turrets
     lucknow:
-      // Rumi Darwaza — a tall scalloped Awadhi gateway
-      '<path d="M170 300 V210 Q170 160 195 160 Q205 140 220 160 Q235 140 245 160 Q270 160 270 210 V300"/>' +
-      '<path d="M195 300 V230 A25 25 0 0 1 245 230 V300"/>' +
-      '<line x1="150" y1="220" x2="150" y2="300"/><circle cx="150" cy="212" r="7"/>' +
-      '<line x1="290" y1="220" x2="290" y2="300"/><circle cx="290" cy="212" r="7"/>',
+      materialGradient('#EDB27E', '#A3673A') +
+      '<path d="M165 300 V205 Q165 150 195 150 Q207 128 220 150 Q233 128 245 150 Q275 150 275 205 V300 Z" fill="url(#matGrad)"/>' +
+      '<path d="M190 300 V235 A30 30 0 0 1 250 235 V300"/>' +
+      '<g stroke-width="1.1">' +
+      '<path d="M172 200 Q185 180 200 195 Q207 175 220 192 Q233 175 240 195 Q255 180 268 200"/>' +
+      '<path d="M178 178 Q190 162 202 176 Q210 158 220 174 Q230 158 238 176 Q250 162 262 178"/>' +
+      '</g>' +
+      '<line x1="145" y1="215" x2="145" y2="300" stroke-width="1.5"/><circle cx="145" cy="203" r="9" fill="url(#matGrad)"/><line x1="145" y1="194" x2="145" y2="182"/><circle cx="145" cy="178" r="2.5" fill="#FBEFD2"/>' +
+      '<line x1="295" y1="215" x2="295" y2="300" stroke-width="1.5"/><circle cx="295" cy="203" r="9" fill="url(#matGrad)"/><line x1="295" y1="194" x2="295" y2="182"/><circle cx="295" cy="178" r="2.5" fill="#FBEFD2"/>' +
+      '<g stroke-width="1"><path d="M165 300 h-15 M275 300 h15"/></g>',
 
+    // Open Hand Monument — shaded dark rotating sheet metal, on a pivot, with a faint sector-grid backdrop
     chandigarh:
-      // Open Hand Monument on a pivot, with a faint sector-grid backdrop
-      '<g stroke-opacity="0.35"><line x1="80" y1="140" x2="80" y2="300"/><line x1="150" y1="120" x2="150" y2="300"/><line x1="290" y1="120" x2="290" y2="300"/><line x1="360" y1="140" x2="360" y2="300"/>' +
-      '<line x1="70" y1="180" x2="370" y2="180"/><line x1="70" y1="250" x2="370" y2="250"/></g>' +
-      '<line x1="220" y1="300" x2="220" y2="210"/>' +
-      '<path d="M220 210 C205 210 195 195 198 175 C199 165 210 160 213 172 C213 158 226 155 228 170 C230 156 243 158 241 173 C248 165 258 172 250 185 C260 182 262 195 250 200 C240 205 228 210 220 210 Z"/>',
+      materialGradient('#AEB3B5', '#54585B') +
+      '<g stroke-opacity="0.3" stroke-width="1">' +
+      '<line x1="90" y1="130" x2="90" y2="300"/><line x1="160" y1="110" x2="160" y2="300"/>' +
+      '<line x1="280" y1="110" x2="280" y2="300"/><line x1="350" y1="130" x2="350" y2="300"/>' +
+      '<line x1="70" y1="175" x2="370" y2="175"/><line x1="70" y1="245" x2="370" y2="245"/>' +
+      '</g>' +
+      '<line x1="220" y1="300" x2="220" y2="268" stroke-width="3"/>' +
+      '<path d="M195 300 L245 300 L235 308 L205 308 Z" fill="url(#matGrad)"/>' +
+      '<rect x="193" y="218" width="54" height="50" rx="16" fill="url(#matGrad)"/>' +
+      '<rect x="190" y="182" width="10" height="38" rx="5" fill="url(#matGrad)" transform="rotate(-45 195 220)"/>' +
+      '<rect x="200" y="168" width="10" height="52" rx="5" fill="url(#matGrad)" transform="rotate(-12 205 220)"/>' +
+      '<rect x="215" y="162" width="10" height="58" rx="5" fill="url(#matGrad)"/>' +
+      '<rect x="230" y="170" width="10" height="50" rx="5" fill="url(#matGrad)" transform="rotate(10 235 220)"/>' +
+      '<rect x="243" y="180" width="10" height="40" rx="5" fill="url(#matGrad)" transform="rotate(24 248 220)"/>',
 
+    // Chinese fishing nets — shaded warm wood poles, dark net mesh, over vivid turquoise water
     kochi:
-      // Chinese fishing nets — cantilevered frame over the water
-      '<line x1="140" y1="300" x2="200" y2="150"/>' +
-      '<line x1="200" y1="150" x2="320" y2="170"/>' +
-      '<line x1="140" y1="230" x2="230" y2="255"/>' +
-      '<line x1="140" y1="265" x2="240" y2="280"/>' +
-      '<path d="M200 150 L320 170 L245 265 L200 210 Z"/>' +
-      '<line x1="230" y1="255" x2="180" y2="290"/><circle cx="180" cy="296" r="5"/>' +
-      '<path d="M40 300 Q90 292 140 300 T240 300 T340 300 T400 300"/>',
+      materialGradient('#CBA05A', '#6E4B22') +
+      '<line x1="130" y1="300" x2="205" y2="140" stroke-width="2.5"/>' +
+      '<line x1="205" y1="140" x2="335" y2="165" stroke-width="2.5"/>' +
+      '<line x1="130" y1="225" x2="235" y2="252"/>' +
+      '<line x1="130" y1="260" x2="248" y2="280"/>' +
+      '<path d="M205 140 L335 165 L252 272 L205 205 Z" fill="url(#matGrad)" fill-opacity="0.6"/>' +
+      '<g stroke-width="0.8">' +
+      '<line x1="215" y1="160" x2="270" y2="230"/><line x1="235" y1="155" x2="285" y2="220"/><line x1="255" y1="152" x2="300" y2="205"/>' +
+      '<line x1="220" y1="180" x2="300" y2="195"/><line x1="222" y1="205" x2="290" y2="215"/>' +
+      '</g>' +
+      '<line x1="235" y1="252" x2="185" y2="288"/><circle cx="185" cy="294" r="5" fill="#3A2810"/>' +
+      '<line x1="248" y1="280" x2="205" y2="298"/>' +
+      '<path d="M30 300 Q85 291 140 300 T250 300 T350 300 T410 300" stroke="#2FB0AC" stroke-width="1.3"/>' +
+      '<path d="M30 312 Q85 305 140 312 T250 312 T350 312 T410 312" stroke="#2FB0AC" stroke-width="1.3"/>',
 
+    // Coastline — shaded green Kailasagiri hill, a red-and-white lighthouse, and turquoise waves
     vizag:
-      // Coastline — Kailasagiri hill, a lighthouse, and the sea
-      '<path d="M60 300 Q140 220 230 300"/>' +
-      '<path d="M300 250 v-70 M292 180 h16 M296 165 h8"/><rect x="294" y="182" width="12" height="68"/>' +
-      '<circle cx="300" cy="175" r="4"/>' +
-      '<path d="M30 300 Q80 290 130 300 T230 300 T330 300 T400 300"/>' +
-      '<path d="M30 312 Q80 304 130 312 T230 312 T330 312 T400 312"/>'
+      materialGradient('#8FC280', '#4E7645') +
+      '<path d="M40 300 Q130 195 240 300 Z" fill="url(#matGrad)"/>' +
+      '<path d="M40 300 Q130 195 240 300"/>' +
+      '<circle cx="150" cy="255" r="3" fill="#F0DFAF"/>' +
+      '<rect x="298" y="182" width="14" height="17.5" fill="#D64B3D"/>' +
+      '<rect x="298" y="199.5" width="14" height="17.5" fill="#EDE6D2"/>' +
+      '<rect x="298" y="217" width="14" height="17.5" fill="#D64B3D"/>' +
+      '<rect x="298" y="234.5" width="14" height="17.5" fill="#EDE6D2"/>' +
+      '<path d="M296 182 h18"/><path d="M300 168 h10"/><path d="M305 182 v-14"/>' +
+      '<circle cx="305" cy="173" r="5" fill="#FBEFD2"/>' +
+      '<g stroke-width="1"><line x1="298" y1="200" x2="312" y2="200"/><line x1="298" y1="218" x2="312" y2="218"/><line x1="298" y1="236" x2="312" y2="236"/></g>' +
+      '<path d="M20 300 Q80 289 140 300 T260 300 T360 300 T410 300" stroke="#2FB0AC" stroke-width="1.3"/>' +
+      '<path d="M20 313 Q80 304 140 313 T260 313 T360 313 T410 313" stroke="#2FB0AC" stroke-width="1.3"/>' +
+      '<path d="M20 326 Q80 318 140 326 T260 326 T360 326 T410 326" stroke="#2FB0AC" stroke-width="1.3"/>'
   };
 
   function heroVisualShell(innerSvg) {
-    return '<svg viewBox="0 0 440 360" width="100%" height="100%" class="landmark-svg">' +
-      '<defs><radialGradient id="heroGlow" cx="50%" cy="34%" r="55%">' +
-      '<stop offset="0%" stop-color="#C6963C" stop-opacity="0.16"/>' +
-      '<stop offset="100%" stop-color="#C6963C" stop-opacity="0"/>' +
-      '</radialGradient></defs>' +
-      '<rect x="0" y="0" width="440" height="360" fill="url(#heroGlow)"/>' +
-      '<g class="landmark-illustration" stroke="#DBAE5C" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round">' +
+    // The sky gradient and sun glow now live in CSS on .hero (they were
+    // always identical across cities anyway, so nothing is lost) -- this
+    // lets the atmosphere stretch full-bleed with zero risk of cropping.
+    // preserveAspectRatio="xMaxYMax meet" scales the illustration to fit
+    // entirely within frame (never cropped, so domes/finials survive any
+    // aspect ratio) and anchors it to the bottom-right, matching where
+    // the CSS glow is positioned.
+    return '<svg viewBox="0 0 440 360" preserveAspectRatio="xMaxYMax meet" class="landmark-svg">' +
+      '<defs>' +
+      '<radialGradient id="groundShadow" cx="220" cy="300" r="170" gradientUnits="userSpaceOnUse">' +
+      '<stop offset="0%" stop-color="#000000" stop-opacity="0.32"/>' +
+      '<stop offset="100%" stop-color="#000000" stop-opacity="0"/>' +
+      '</radialGradient>' +
+      '</defs>' +
+      '<g stroke="#3A2410" stroke-width="1.2" fill="none" opacity="0.55">' +
+      '<path d="M150 62 q5 -6 10 0 q5 -6 10 0"/>' +
+      '<path d="M285 44 q4 -5 8 0 q4 -5 8 0"/>' +
+      '</g>' +
+      '<g opacity="0.16" fill="#3A2410">' +
+      '<rect x="14" y="272" width="16" height="28"/><rect x="34" y="255" width="13" height="45"/><rect x="51" y="280" width="18" height="20"/>' +
+      '<rect x="362" y="265" width="15" height="35"/><rect x="381" y="278" width="20" height="22"/><rect x="405" y="250" width="12" height="50"/>' +
+      '</g>' +
+      '<ellipse cx="220" cy="300" rx="180" ry="32" fill="url(#groundShadow)"/>' +
+      '<g class="landmark-illustration" stroke="#3A2410" stroke-width="1.7" fill="none" stroke-linecap="round" stroke-linejoin="round">' +
       innerSvg +
       '</g>' +
       '</svg>';
@@ -426,6 +573,7 @@
   var heroCityName = document.getElementById('heroCityName');
   var heroDescription = document.getElementById('heroDescription');
   var heroCtaLabel = document.getElementById('heroCtaLabel');
+  var heroCta = document.getElementById('heroCta');
   var heroMeta = document.getElementById('heroMeta');
   var heroVisual = document.getElementById('heroVisual');
 
@@ -461,7 +609,8 @@
 
   var selectedCityKey = 'bengaluru';
   var currentLoanPrincipal = null;      // last predicted price in rupees, for the EMI panel
-  var bengaluruLocationCount = null;    // set once /get_location_names resolves
+  var locationCountsByCity = {};        // city -> number of locations returned by the model
+  var locationOptionsByCity = {};       // city -> raw location list from the API
 
   document.addEventListener('DOMContentLoaded', init);
 
@@ -471,8 +620,6 @@
     form.addEventListener('submit', handlePredictSubmit);
     emiRateInput.addEventListener('input', updateEmi);
     emiTenureSelect.addEventListener('change', updateEmi);
-
-    loadBengaluruLocations(); // fetched once up front regardless of which city is initially shown
 
     var startCity = getCityFromUrl();
     selectCity(CITIES[startCity] ? startCity : 'bengaluru');
@@ -569,9 +716,10 @@
       heroCityName.textContent = city.name;
       heroDescription.textContent = city.description;
       heroCtaLabel.textContent = city.available ? 'Predict Home Price' : ('Explore ' + city.name);
+      heroCta.setAttribute('href', city.available ? '#predictor' : '#localities');
 
-      if (key === 'bengaluru' && bengaluruLocationCount !== null) {
-        setHeroMeta(bengaluruLocationCount);
+      if (locationCountsByCity[key] !== undefined) {
+        setHeroMeta(key, locationCountsByCity[key]);
       } else {
         heroMeta.textContent = '';
       }
@@ -585,10 +733,12 @@
     localitiesCityName.textContent = city.name;
 
     hideGlobalAlert();
+    resetPredictionState();
 
     if (city.available) {
       predictorLive.classList.remove('is-hidden');
       predictorComingSoon.classList.add('is-hidden');
+      loadCityLocations(key);
     } else {
       predictorLive.classList.add('is-hidden');
       predictorComingSoon.classList.remove('is-hidden');
@@ -615,14 +765,21 @@
     }, 160);
   }
 
-  function setHeroMeta(count) {
-    heroMeta.innerHTML = '<strong>' + count + '</strong> Bengaluru localit' + (count === 1 ? 'y' : 'ies') + ' loaded from the model';
+  function setHeroMeta(cityKey, count) {
+    var cityName = CITIES[cityKey].name;
+    heroMeta.innerHTML = '<strong>' + count + '</strong> ' + cityName + ' localit' + (count === 1 ? 'y' : 'ies') + ' loaded from the model';
+  }
+
+  function resetPredictionState() {
+    currentLoanPrincipal = null;
+    resultCard.classList.add('is-hidden');
+    emiValueEl.textContent = '\u2014';
   }
 
   /* ------------------------------------------------------------------
      Popular localities — a card per locality (tag + name + CTA),
      matched against the live dropdown only when the selected city has
-     one (i.e. Bengaluru).
+     a live model and location list.
      ------------------------------------------------------------------ */
 
   function renderLocalities(city) {
@@ -683,7 +840,7 @@
   }
 
   /* ------------------------------------------------------------------
-     Loading Bengaluru's locations for the dropdown
+     Loading the selected city's locations for the dropdown
      NOTE ON URLS: bhk.html is served separately from Flask (e.g. via Live
      Server on http://127.0.0.1:5500) while Flask runs on :5000 — different
      origins, so API_BASE is hardcoded and server.py needs CORS enabled
@@ -691,10 +848,21 @@
      Flask itself, switch API_BASE back to '' so paths stay relative.
      ------------------------------------------------------------------ */
 
-  function loadBengaluruLocations() {
+  function loadCityLocations(cityKey) {
+    var city = CITIES[cityKey];
+    if (!city || !city.available || !city.locationsEndpoint) {
+      setLocationErrorState();
+      return;
+    }
+
+    if (locationOptionsByCity[cityKey]) {
+      populateLocationDropdown(cityKey, locationOptionsByCity[cityKey]);
+      return;
+    }
+
     setLocationLoadingState();
 
-    fetch(API_BASE + CITIES.bengaluru.locationsEndpoint)
+    fetch(API_BASE + city.locationsEndpoint + '?city=' + encodeURIComponent(cityKey))
       .then(function (response) {
         if (!response.ok) throw new Error('Server responded with status ' + response.status);
         return response.json();
@@ -702,13 +870,13 @@
       .then(function (data) {
         var locations = Array.isArray(data.location) ? data.location : [];
         if (locations.length === 0) throw new Error('No locations returned');
-        populateLocationDropdown(locations);
+        locationOptionsByCity[cityKey] = locations;
+        populateLocationDropdown(cityKey, locations);
       })
       .catch(function () {
+        if (selectedCityKey !== cityKey) return;
         setLocationErrorState();
-        if (selectedCityKey === 'bengaluru') {
-          showGlobalAlert('Unable to load locations. Please make sure the Flask server is running, then refresh the page.');
-        }
+        showGlobalAlert('Unable to load locations. Please make sure the Flask server is running, then refresh the page.');
       });
   }
 
@@ -722,8 +890,12 @@
     locationSelect.innerHTML = '<option value="">Locations unavailable</option>';
   }
 
-  function populateLocationDropdown(locations) {
+  function populateLocationDropdown(cityKey, locations) {
     var sorted = locations.slice().sort(function (a, b) { return String(a).localeCompare(String(b)); });
+
+    locationCountsByCity[cityKey] = sorted.length;
+
+    if (selectedCityKey !== cityKey) return;
 
     var optionsHtml = '<option value="">Select a location</option>';
     sorted.forEach(function (name) {
@@ -732,9 +904,7 @@
 
     locationSelect.innerHTML = optionsHtml;
     locationSelect.disabled = false;
-
-    bengaluruLocationCount = sorted.length;
-    if (selectedCityKey === 'bengaluru') setHeroMeta(bengaluruLocationCount);
+    setHeroMeta(cityKey, sorted.length);
   }
 
   /* ------------------------------------------------------------------
@@ -742,7 +912,7 @@
      Absolute rule: only ever fires for a city that is `available` and has
      a real `endpoint` — enforced here even though the UI already hides
      the form for every other city, so this can never fire a request
-     against the Bengaluru model on another city's behalf.
+     against one city's model on another city's behalf.
      ------------------------------------------------------------------ */
 
   function handlePredictSubmit(event) {
@@ -768,6 +938,7 @@
     }
 
     var requestBody = {
+      city: selectedCityKey,
       total_sqft: Number(formValues.total_sqft),
       location: formValues.location,
       bhk: Number(formValues.bhk),
@@ -793,6 +964,7 @@
       .then(function (data) {
         var price = getPriceFromResponse(data);
         if (price === null) throw new Error('Received an unexpected response from the prediction server.');
+        if (price <= 0) throw new Error('The model couldn\u2019t produce a reliable estimate for this combination of details. Try adjusting the square footage, BHK, or location.');
         renderResult(price, requestBody);
       })
       .catch(function (error) {
@@ -864,7 +1036,7 @@
      ------------------------------------------------------------------ */
 
   function toLakhs(rawPrice) {
-    return rawPrice > 10000 ? rawPrice / 100000 : rawPrice;
+    return rawPrice;
   }
 
   function formatPriceFromLakhs(priceInLakhs) {
