@@ -25,36 +25,60 @@ def get_estimated_price(city, location, sqft, bhk, bath):
     data_columns = __models[city]["columns"]
     model = __models[city]["model"]
 
-    # Find location column
-    try:
-        loc_index = data_columns.index(location.lower())
-    except ValueError:
-        loc_index = -1
-
     # Create feature vector
     x = np.zeros(len(data_columns))
 
-    # IMPORTANT:
-    # Assign values using column names rather than fixed indexes.
-    # This works even if Bengaluru and Chennai have different
-    # column orders.
+    # Common features
     x[data_columns.index("total_sqft")] = sqft
     x[data_columns.index("bhk")] = bhk
     x[data_columns.index("bath")] = bath
 
-    # Set selected location to 1
-    if loc_index >= 0:
-        x[loc_index] = 1
+    # Find location column
+    location_column = None
 
-    # Predict price
+    for column in data_columns:
+
+        if city in ["delhi", "mumbai"]:
+
+            # Delhi / Mumbai columns are like:
+            # location_Alaknanda
+            # location_Dwarka
+            # location_Andheri West
+            # location_Mira Road
+
+            if column.lower() == f"location_{location}".lower():
+                location_column = column
+                break
+
+        else:
+
+            # Bengaluru / Chennai location columns
+            # are stored directly as location names
+
+            if column.lower() == location.lower():
+                location_column = column
+                break
+
+    if location_column is None:
+        raise ValueError(
+            f"Invalid location '{location}' for {city.capitalize()}"
+        )
+
+    # Set selected location to 1
+    x[data_columns.index(location_column)] = 1
+
+    # Predict
     prediction = model.predict([x])[0]
 
-    # Chennai model was trained using rupees.
-    # Bengaluru model already returns lakhs.
-    if city == "chennai":
+    # Delhi model was trained on log1p(price)
+    if city == "delhi":
+        prediction = np.expm1(prediction)
+
+    # Convert Delhi and Chennai to lakhs
+    if city in ["delhi", "chennai", "mumbai"]:
         prediction = prediction / 100000
 
-    return round(prediction, 2)
+    return float(round(prediction, 2))
 
 
 def get_location_names(city):
@@ -74,19 +98,14 @@ def load_saved_artifacts():
     global __models
     global __locations
 
-    # HPP/
-    # ├── model/
-    # │   ├── bengaluru/
-    # │   └── chennai/
-    # └── server/
-    #     └── util.py
-
     BASE_DIR = Path(__file__).resolve().parent.parent
     MODEL_DIR = BASE_DIR / "model"
 
     cities = [
         "bengaluru",
-        "chennai"
+        "chennai",
+        "delhi",
+        "mumbai"
     ]
 
     for city in cities:
@@ -94,36 +113,80 @@ def load_saved_artifacts():
         city_dir = MODEL_DIR / city
 
         columns_path = city_dir / f"{city}_columns.json"
-        model_path = city_dir / f"{city}_home_price_predictor.pickle"
+
+        # Delhi / Mumbai use .pkl
+        if city in ["delhi", "mumbai"]:
+
+            model_path = (
+                city_dir /
+                f"{city}_home_price_predictor.pkl"
+            )
+
+        else:
+
+            model_path = (
+                city_dir /
+                f"{city}_home_price_predictor.pickle"
+            )
 
         # Load columns
         with open(columns_path, "r") as f:
-            data_columns = json.load(f)["data_columns"]
+
+            columns_data = json.load(f)
+
+        # Bengaluru / Chennai:
+        # {"data_columns": [...]}
+        #
+        # Delhi / Mumbai:
+        # [...]
+
+        if isinstance(columns_data, dict):
+
+            data_columns = columns_data["data_columns"]
+
+        else:
+
+            data_columns = columns_data
 
         # Load model
         with open(model_path, "rb") as f:
+
             model = pickle.load(f)
 
-        # Store model and columns
+        # Store model
         __models[city] = {
             "columns": data_columns,
             "model": model
         }
 
-        # Get only location columns
-        core_columns = {
-            "total_sqft",
-            "bhk",
-            "bath"
-        }
+        # Get location names
+        if city in ["delhi", "mumbai"]:
 
-        __locations[city] = [
-            column
-            for column in data_columns
-            if column not in core_columns
-        ]
+            __locations[city] = [
+                column.replace("location_", "", 1)
+                for column in data_columns
+                if column.startswith("location_")
+            ]
 
-        print(f"{city.capitalize()} model loaded")
+        else:
+
+            core_columns = {
+                "total_sqft",
+                "bhk",
+                "bath"
+            }
+
+            __locations[city] = [
+                column
+                for column in data_columns
+                if column not in core_columns
+            ]
+
+        print(
+            f"{city.capitalize()} model loaded "
+            f"({len(data_columns)} features, "
+            f"{len(__locations[city])} locations)"
+        )
 
     print("Loading saved artifacts....done")
 

@@ -308,21 +308,22 @@ button { font-family: inherit; }
   display: flex;
   align-items: center;
   background:
-    radial-gradient(760px 520px at 78% 30%, rgba(255, 221, 140, 0.30), transparent 62%),
+    radial-gradient(820px 560px at 62% 30%, rgba(255, 221, 140, 0.30), transparent 62%),
     linear-gradient(180deg, #241B3D 0%, #8A3F5C 45%, #D9713F 78%, #EFA23E 100%);
 }
 
-/* The per-city SVG landmark, anchored to the bottom-right of the hero as
-   a backdrop. It's sized to a fraction of the hero (not the full inset)
-   so the illustration reads as a scene element rather than dominating the
-   frame; preserveAspectRatio="xMaxYMax meet" (set on the svg itself) then
-   keeps the whole thing in frame -- never cropped -- within that box. */
+/* The per-city SVG landmark, positioned toward the right-of-centre as a
+   backdrop (not pinned to the very corner). It's sized to a fraction of
+   the hero (not the full inset) so the illustration reads as a scene
+   element rather than dominating the frame; preserveAspectRatio=
+   "xMaxYMax meet" (set on the svg itself) then keeps the whole thing in
+   frame -- never cropped -- within that box. */
 .hero-visual {
   position: absolute;
-  right: 0;
-  bottom: 0;
+  right: 16%;
+  bottom: 14%;
   width: 52%;
-  height: 62%;
+  height: 56%;
   z-index: 0;
 }
 

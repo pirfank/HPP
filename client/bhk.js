@@ -6,7 +6,7 @@
    ARCHITECTURE
    ------------
    CITIES is the single source of truth for every city's content. Only
-   Bengaluru and Chennai currently have `available: true` and real endpoint
+   Bengaluru, Delhi, Mumbaiand Chennai currently have `available: true` and real endpoint
    paths — every other city has `available: false` and `endpoint: null`.
    selectCity()
    re-renders the page from this object; nothing city-specific is hardcoded
@@ -50,9 +50,9 @@
       name: 'Mumbai',
       epithet: 'Aamchi Mumbai',
       description: "India's financial capital — a dense, high-energy coastal metropolis where prime real estate commands a premium. Space is scarce and vertical, from South Mumbai's heritage towers to the sprawling suburbs.",
-      available: false,
-      endpoint: null,
-      locationsEndpoint: null,
+      available: true,
+      endpoint: '/predict_home_price',
+      locationsEndpoint: '/get_location_names',
       localities: [
         { name: 'Andheri', tag: 'Business Hub', desc: 'A major commercial and transit hub straddling both the western and eastern suburbs.' },
         { name: 'Bandra', tag: 'Upscale & Entertainment', desc: "Mumbai's fashionable heart, known for its sea-facing promenade, boutiques, and nightlife." },
@@ -69,9 +69,9 @@
       name: 'Delhi',
       epithet: 'The Capital City',
       description: 'The national capital region — a sprawling mix of historic neighbourhoods, government districts, and expanding suburbs. Property here ranges from colonial-era bungalows to fast-growing satellite townships.',
-      available: false,
-      endpoint: null,
-      locationsEndpoint: null,
+      available: true,
+      endpoint: '/predict_home_price',
+      locationsEndpoint: '/get_location_names',
       localities: [
         { name: 'Dwarka', tag: 'Planned Sub-City', desc: "One of Asia's largest planned sub-cities, laid out in numbered residential sectors." },
         { name: 'Rohini', tag: 'Residential', desc: 'A large, well-established residential district in northwest Delhi.' },
@@ -282,7 +282,6 @@
   }
 
   var LANDMARKS = {
-    // Vidhana Soudha — shaded grey granite, colonnaded base, central dome, two flanking cupolas
     bengaluru:
       materialGradient('#D9E2DE', '#748680') +
       '<rect x="55" y="228" width="330" height="72" fill="url(#matGrad)"/>' +
@@ -311,7 +310,6 @@
       '<rect x="45" y="300" width="350" height="8" fill="#5A6D66"/>' +
       '<rect x="35" y="308" width="370" height="8" fill="#465751"/>',
 
-    // Gateway of India — shaded ochre basalt, dome integrated at the peak, turrets at the shoulders, turquoise sea
     mumbai:
       materialGradient('#F3CC7A', '#9E6C24') +
       '<path d="M155 300 V160 A65 65 0 0 1 285 160 V300 Z" fill="url(#matGrad)"/>' +
@@ -329,7 +327,6 @@
       '<path d="M330 316 L370 316 L362 324 L338 324 Z" fill="url(#matGrad)"/>' +
       '<line x1="352" y1="316" x2="352" y2="300"/><path d="M352 300 L364 314 L352 314 Z" fill="url(#matGrad)"/>',
 
-    // India Gate — shaded red sandstone, a solitary arch on a stepped plinth
     delhi:
       materialGradient('#E6A181', '#98432D') +
       '<path d="M160 300 V150 A60 60 0 0 1 280 150 V300 Z" fill="url(#matGrad)"/>' +
@@ -341,7 +338,6 @@
       '<rect x="112" y="320" width="216" height="8" fill="#602F20"/>' +
       '<line x1="220" y1="150" x2="220" y2="126"/><circle cx="220" cy="120" r="4" fill="#FBEFD2"/>',
 
-    // Charminar — shaded pale grey-green granite, four bold minarets with bulbous domes, grand central arch
     hyderabad:
       materialGradient('#E2E5D2', '#8A9576') +
       (function () {
@@ -364,7 +360,6 @@
       '<circle cx="220" cy="222" r="8" fill="none" stroke-width="1"/>' +
       '<g stroke-width="1"><path d="M165 205 h10 v-8 h9 v8 h9 v-8 h9 v8 h9 v-8 h9 v8 h9 v-8 h9 v8 h10"/></g>',
 
-    // Gopuram — a stepped temple tower painted in the vivid multi-colour palette real gopurams use
     chennai:
       (function () {
         var tiers = [
@@ -394,7 +389,6 @@
         return out;
       })(),
 
-    // Howrah Bridge — shaded grey steel, a dense cantilever truss between two pylons, muddy river
     kolkata:
       materialGradient('#C7D8E1', '#5C7686') +
       '<rect x="82" y="140" width="22" height="160" fill="url(#matGrad)"/>' +
@@ -410,7 +404,6 @@
       '<path d="M40 312 Q95 304 150 312 T260 312 T370 312 T410 312" stroke="#6B7A4A" stroke-width="1.3"/>' +
       '<path d="M395 296 L420 296 L412 304 L400 304 Z" fill="url(#matGrad)"/>',
 
-    // Shaniwar Wada — shaded red laterite stone, fortified gate, bastion towers, iron-studded door
     pune:
       materialGradient('#E29368', '#8A3F26') +
       '<rect x="95" y="205" width="65" height="95" fill="url(#matGrad)"/>' +
@@ -426,7 +419,6 @@
       '</g>' +
       '<rect x="75" y="300" width="290" height="8" fill="#6B331C"/>',
 
-    // Sidi Saiyyed jali — shaded cream sandstone, a grand arch containing a dense branching "tree of life" lattice
     ahmedabad:
       materialGradient('#F5E8C2', '#B0925A') +
       '<path d="M140 300 V150 A80 80 0 0 1 300 150 V300 Z" fill="url(#matGrad)"/>' +
@@ -443,7 +435,6 @@
       '<path d="M150 172 Q220 142 290 172" stroke-width="1"/>' +
       '<path d="M155 158 Q220 132 285 158" stroke-width="1"/>',
 
-    // Hawa Mahal — shaded rose-pink sandstone, a dense honeycomb facade of jharokha windows
     jaipur:
       materialGradient('#F5B9B9', '#B85D5D') +
       '<rect x="110" y="130" width="220" height="170" fill="url(#matGrad)"/>' +
@@ -461,7 +452,6 @@
       })() +
       '<g stroke-width="1"><path d="M118 130 v-10 M150 130 v-10 M182 130 v-10 M214 130 v-10 M246 130 v-10 M278 130 v-10 M322 130 v-10"/></g>',
 
-    // Rumi Darwaza — shaded warm terracotta, a tall gateway with a scalloped crown and side turrets
     lucknow:
       materialGradient('#EDB27E', '#A3673A') +
       '<path d="M165 300 V205 Q165 150 195 150 Q207 128 220 150 Q233 128 245 150 Q275 150 275 205 V300 Z" fill="url(#matGrad)"/>' +
@@ -474,7 +464,6 @@
       '<line x1="295" y1="215" x2="295" y2="300" stroke-width="1.5"/><circle cx="295" cy="203" r="9" fill="url(#matGrad)"/><line x1="295" y1="194" x2="295" y2="182"/><circle cx="295" cy="178" r="2.5" fill="#FBEFD2"/>' +
       '<g stroke-width="1"><path d="M165 300 h-15 M275 300 h15"/></g>',
 
-    // Open Hand Monument — shaded dark rotating sheet metal, on a pivot, with a faint sector-grid backdrop
     chandigarh:
       materialGradient('#AEB3B5', '#54585B') +
       '<g stroke-opacity="0.3" stroke-width="1">' +
@@ -491,7 +480,6 @@
       '<rect x="230" y="170" width="10" height="50" rx="5" fill="url(#matGrad)" transform="rotate(10 235 220)"/>' +
       '<rect x="243" y="180" width="10" height="40" rx="5" fill="url(#matGrad)" transform="rotate(24 248 220)"/>',
 
-    // Chinese fishing nets — shaded warm wood poles, dark net mesh, over vivid turquoise water
     kochi:
       materialGradient('#CBA05A', '#6E4B22') +
       '<line x1="130" y1="300" x2="205" y2="140" stroke-width="2.5"/>' +
@@ -508,7 +496,6 @@
       '<path d="M30 300 Q85 291 140 300 T250 300 T350 300 T410 300" stroke="#2FB0AC" stroke-width="1.3"/>' +
       '<path d="M30 312 Q85 305 140 312 T250 312 T350 312 T410 312" stroke="#2FB0AC" stroke-width="1.3"/>',
 
-    // Coastline — shaded green Kailasagiri hill, a red-and-white lighthouse, and turquoise waves
     vizag:
       materialGradient('#8FC280', '#4E7645') +
       '<path d="M40 300 Q130 195 240 300 Z" fill="url(#matGrad)"/>' +
@@ -527,13 +514,6 @@
   };
 
   function heroVisualShell(innerSvg) {
-    // The sky gradient and sun glow now live in CSS on .hero (they were
-    // always identical across cities anyway, so nothing is lost) -- this
-    // lets the atmosphere stretch full-bleed with zero risk of cropping.
-    // preserveAspectRatio="xMaxYMax meet" scales the illustration to fit
-    // entirely within frame (never cropped, so domes/finials survive any
-    // aspect ratio) and anchors it to the bottom-right, matching where
-    // the CSS glow is positioned.
     return '<svg viewBox="0 0 440 360" preserveAspectRatio="xMaxYMax meet" class="landmark-svg">' +
       '<defs>' +
       '<radialGradient id="groundShadow" cx="220" cy="300" r="170" gradientUnits="userSpaceOnUse">' +
@@ -611,6 +591,7 @@
   var currentLoanPrincipal = null;      // last predicted price in rupees, for the EMI panel
   var locationCountsByCity = {};        // city -> number of locations returned by the model
   var locationOptionsByCity = {};       // city -> raw location list from the API
+  var pendingLocalitySelection = null;  // { cityKey, name } — a locality clicked before that city's locations finished loading
 
   document.addEventListener('DOMContentLoaded', init);
 
@@ -620,6 +601,15 @@
     form.addEventListener('submit', handlePredictSubmit);
     emiRateInput.addEventListener('input', updateEmi);
     emiTenureSelect.addEventListener('change', updateEmi);
+
+    // A result on screen describes a specific set of inputs. If the person
+    // changes any of them by hand afterward, that result no longer matches
+    // what's in the form, so clear it rather than leave a stale price up.
+    [locationSelect, sqftInput, bhkSelect, bathSelect].forEach(function (el) {
+      el.addEventListener('input', function () {
+        if (!resultCard.classList.contains('is-hidden')) resetPredictionState();
+      });
+    });
 
     var startCity = getCityFromUrl();
     selectCity(CITIES[startCity] ? startCity : 'bengaluru');
@@ -816,8 +806,16 @@
 
       card.addEventListener('click', function () {
         if (city.available) {
-          var match = findMatchingLocationOption(locality.name);
-          if (match) locationSelect.value = match.value;
+          if (locationSelect.disabled) {
+            // Locations for this city haven't finished loading yet — queue
+            // the pick and apply it the moment they arrive, rather than
+            // silently failing to find a match in an empty dropdown.
+            pendingLocalitySelection = { cityKey: selectedCityKey, name: locality.name };
+          } else {
+            var match = findMatchingLocationOption(locality.name);
+            if (match) locationSelect.value = match.value;
+          }
+          resetPredictionState();
           document.getElementById('predictor').scrollIntoView({ behavior: 'smooth', block: 'start' });
           locationSelect.focus();
         } else {
@@ -841,11 +839,6 @@
 
   /* ------------------------------------------------------------------
      Loading the selected city's locations for the dropdown
-     NOTE ON URLS: bhk.html is served separately from Flask (e.g. via Live
-     Server on http://127.0.0.1:5500) while Flask runs on :5000 — different
-     origins, so API_BASE is hardcoded and server.py needs CORS enabled
-     (flask-cors) for both GET and POST. If you later serve bhk.html FROM
-     Flask itself, switch API_BASE back to '' so paths stay relative.
      ------------------------------------------------------------------ */
 
   function loadCityLocations(cityKey) {
@@ -905,14 +898,16 @@
     locationSelect.innerHTML = optionsHtml;
     locationSelect.disabled = false;
     setHeroMeta(cityKey, sorted.length);
+
+    if (pendingLocalitySelection && pendingLocalitySelection.cityKey === cityKey) {
+      var match = findMatchingLocationOption(pendingLocalitySelection.name);
+      if (match) locationSelect.value = match.value;
+      pendingLocalitySelection = null;
+    }
   }
 
   /* ------------------------------------------------------------------
      Form submit -> validate -> call the selected city's predict endpoint
-     Absolute rule: only ever fires for a city that is `available` and has
-     a real `endpoint` — enforced here even though the UI already hides
-     the form for every other city, so this can never fire a request
-     against one city's model on another city's behalf.
      ------------------------------------------------------------------ */
 
   function handlePredictSubmit(event) {
