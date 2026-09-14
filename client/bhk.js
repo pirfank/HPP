@@ -6,7 +6,7 @@
    ARCHITECTURE
    ------------
    CITIES is the single source of truth for every city's content. Only
-   Bengaluru, Delhi, Mumbaiand Chennai currently have `available: true` and real endpoint
+   Bengaluru, Mumbai, Delhi and Chennai currently have `available: true` and real endpoint
    paths — every other city has `available: false` and `endpoint: null`.
    selectCity()
    re-renders the page from this object; nothing city-specific is hardcoded
@@ -32,8 +32,8 @@
       epithet: 'Namma Bengaluru',
       description: "India's tech capital, known for its parks, pleasant climate, and fast-growing IT corridors. Property demand here spans legacy neighbourhoods near the city centre and booming tech-corridor suburbs.",
       available: true,
-      endpoint: '/predict_home_price',            // matches server.py exactly — do not change
-      locationsEndpoint: '/get_location_names',    // matches server.py exactly — do not change
+      endpoint: '/predict_home_price',
+      locationsEndpoint: '/get_location_names',
       localities: [
         { name: 'Whitefield', tag: 'IT Corridor', desc: 'Sprawling tech campuses, malls, and tree-lined layouts on the eastern edge of the city.' },
         { name: 'Electronic City', tag: 'IT Hub', desc: "One of India's earliest IT hubs, anchored by major tech and software campuses." },
@@ -292,13 +292,22 @@
       '<line x1="295" y1="228" x2="295" y2="300"/><line x1="320" y1="228" x2="320" y2="300"/>' +
       '<line x1="345" y1="228" x2="345" y2="300"/><line x1="368" y1="228" x2="368" y2="300"/>' +
       '</g>' +
+      '<g stroke-width="0.8" opacity="0.6"><line x1="55" y1="248" x2="385" y2="248"/><line x1="55" y1="270" x2="385" y2="270"/></g>' +
+      '<g fill="#465751" stroke-width="1">' +
+      '<rect x="76" y="252" width="13" height="34" rx="1"/><rect x="101" y="252" width="13" height="34" rx="1"/>' +
+      '<rect x="126" y="252" width="13" height="34" rx="1"/><rect x="151" y="252" width="13" height="34" rx="1"/>' +
+      '<rect x="276" y="252" width="13" height="34" rx="1"/><rect x="301" y="252" width="13" height="34" rx="1"/>' +
+      '<rect x="326" y="252" width="13" height="34" rx="1"/><rect x="351" y="252" width="13" height="34" rx="1"/>' +
+      '</g>' +
       '<path d="M165 188 L220 163 L275 188 Z" fill="url(#matGrad)"/>' +
       '<rect x="165" y="188" width="110" height="42" fill="url(#matGrad)"/>' +
       '<g stroke-width="1.2"><line x1="182" y1="188" x2="182" y2="230"/><line x1="202" y1="188" x2="202" y2="230"/>' +
       '<line x1="238" y1="188" x2="238" y2="230"/><line x1="258" y1="188" x2="258" y2="230"/></g>' +
+      '<g fill="#465751" stroke-width="0.9"><rect x="188" y="200" width="11" height="26"/><rect x="241" y="200" width="11" height="26"/></g>' +
       '<rect x="188" y="145" width="64" height="40" fill="url(#matGrad)"/>' +
       '<path d="M188 145 A32 32 0 0 1 252 145 Z" fill="url(#matGrad)"/>' +
       '<g stroke-width="1"><path d="M204 145 A16 32 0 0 1 206 116"/><path d="M220 145 V113"/><path d="M236 145 A16 32 0 0 1 234 116"/></g>' +
+      '<g stroke-width="0.8" opacity="0.7"><path d="M196 160 A24 24 0 0 1 220 145"/><path d="M244 160 A24 24 0 0 1 220 145"/></g>' +
       '<line x1="220" y1="113" x2="220" y2="96"/><circle cx="220" cy="90" r="4.5" fill="#D9603A"/>' +
       '<rect x="118" y="178" width="30" height="24" fill="url(#matGrad)"/>' +
       '<path d="M118 178 A15 15 0 0 1 148 178 Z" fill="url(#matGrad)"/>' +
@@ -306,37 +315,57 @@
       '<rect x="292" y="178" width="30" height="24" fill="url(#matGrad)"/>' +
       '<path d="M292 178 A15 15 0 0 1 322 178 Z" fill="url(#matGrad)"/>' +
       '<line x1="307" y1="163" x2="307" y2="152"/><circle cx="307" cy="149" r="3" fill="#D9603A"/>' +
-      '<g opacity="0.5"><path d="M40 300 Q46 280 42 262" stroke="#3F5A46" stroke-width="3"/><path d="M400 300 Q394 282 398 264" stroke="#3F5A46" stroke-width="3"/></g>' +
+      '<g stroke="#3F5A46" stroke-width="1"><line x1="90" y1="228" x2="90" y2="200" stroke-width="3"/><line x1="350" y1="228" x2="350" y2="200" stroke-width="3"/></g>' +
+      '<g fill="#5F8C6E" opacity="0.85"><circle cx="82" cy="195" r="13"/><circle cx="95" cy="188" r="10"/><circle cx="70" cy="190" r="9"/>' +
+      '<circle cx="358" cy="195" r="13"/><circle cx="345" cy="188" r="10"/><circle cx="370" cy="190" r="9"/></g>' +
+      '<g stroke-width="0.7" opacity="0.5"><path d="M18 300 L38 260 L58 300 Z"/><path d="M382 300 L402 260 L422 300 Z"/></g>' +
       '<rect x="45" y="300" width="350" height="8" fill="#5A6D66"/>' +
-      '<rect x="35" y="308" width="370" height="8" fill="#465751"/>',
+      '<rect x="35" y="308" width="370" height="8" fill="#465751"/>' +
+      '<g stroke-width="0.6" opacity="0.4"><line x1="60" y1="304" x2="60" y2="308"/><line x1="90" y1="304" x2="90" y2="308"/><line x1="120" y1="304" x2="120" y2="308"/>' +
+      '<line x1="150" y1="304" x2="150" y2="308"/><line x1="180" y1="304" x2="180" y2="308"/><line x1="210" y1="304" x2="210" y2="308"/>' +
+      '<line x1="240" y1="304" x2="240" y2="308"/><line x1="270" y1="304" x2="270" y2="308"/><line x1="300" y1="304" x2="300" y2="308"/>' +
+      '<line x1="330" y1="304" x2="330" y2="308"/><line x1="360" y1="304" x2="360" y2="308"/></g>',
 
     mumbai:
       materialGradient('#F3CC7A', '#9E6C24') +
       '<path d="M155 300 V160 A65 65 0 0 1 285 160 V300 Z" fill="url(#matGrad)"/>' +
+      '<g stroke-width="0.8" opacity="0.55"><line x1="155" y1="200" x2="285" y2="200"/><line x1="155" y1="240" x2="285" y2="240"/><line x1="155" y1="270" x2="285" y2="270"/></g>' +
       '<path d="M180 300 V195 A40 40 0 0 1 260 195 V300"/>' +
+      '<g stroke-width="0.9" opacity="0.7"><path d="M188 290 A32 32 0 0 1 252 290" transform="translate(0,4)"/></g>' +
       '<rect x="200" y="76" width="40" height="20" fill="url(#matGrad)"/>' +
       '<path d="M200 76 A20 22 0 0 1 240 76 Z" fill="url(#matGrad)"/>' +
+      '<g stroke-width="0.8" opacity="0.7"><path d="M208 76 V60 A12 16 0 0 1 232 60 V76"/></g>' +
       '<line x1="220" y1="54" x2="220" y2="38"/><circle cx="220" cy="33" r="4" fill="#FBEFD2"/>' +
       '<circle cx="178" cy="150" r="9" fill="url(#matGrad)"/><line x1="178" y1="141" x2="178" y2="128"/><circle cx="178" cy="124" r="2.5" fill="#FBEFD2"/>' +
       '<circle cx="262" cy="150" r="9" fill="url(#matGrad)"/><line x1="262" y1="141" x2="262" y2="128"/><circle cx="262" cy="124" r="2.5" fill="#FBEFD2"/>' +
-      '<g stroke-width="1"><circle cx="190" cy="215" r="3"/><circle cx="250" cy="215" r="3"/></g>' +
+      '<g stroke-width="1"><circle cx="190" cy="215" r="3"/><circle cx="250" cy="215" r="3"/><circle cx="170" cy="240" r="3"/><circle cx="270" cy="240" r="3"/></g>' +
+      '<g stroke-width="0.8" opacity="0.6"><path d="M160 220 Q170 210 180 220"/><path d="M260 220 Q270 210 280 220"/></g>' +
       '<rect x="130" y="300" width="180" height="10" fill="url(#matGrad)"/>' +
       '<rect x="115" y="310" width="210" height="8" fill="#7A5A1E"/>' +
       '<path d="M30 322 Q90 312 150 322 T270 322 T390 322" stroke="#2FB0AC" stroke-width="1.3"/>' +
       '<path d="M30 334 Q90 326 150 334 T270 334 T390 334" stroke="#2FB0AC" stroke-width="1.3"/>' +
+      '<path d="M20 346 Q80 339 140 346 T260 346 T400 346" stroke="#2FB0AC" stroke-width="1"/>' +
       '<path d="M330 316 L370 316 L362 324 L338 324 Z" fill="url(#matGrad)"/>' +
-      '<line x1="352" y1="316" x2="352" y2="300"/><path d="M352 300 L364 314 L352 314 Z" fill="url(#matGrad)"/>',
+      '<line x1="352" y1="316" x2="352" y2="300"/><path d="M352 300 L364 314 L352 314 Z" fill="url(#matGrad)"/>' +
+      '<path d="M50 330 L78 330 L70 340 L58 340 Z" fill="#8A6A2E" opacity="0.7"/><line x1="64" y1="330" x2="64" y2="316"/><path d="M64 316 L74 326 L64 326 Z" fill="#8A6A2E" opacity="0.7"/>',
 
     delhi:
       materialGradient('#E6A181', '#98432D') +
       '<path d="M160 300 V150 A60 60 0 0 1 280 150 V300 Z" fill="url(#matGrad)"/>' +
+      '<g stroke-width="0.8" opacity="0.55"><line x1="160" y1="175" x2="280" y2="175"/><line x1="160" y1="245" x2="280" y2="245"/><line x1="160" y1="270" x2="280" y2="270"/></g>' +
       '<path d="M186 300 V185 A34 34 0 0 1 254 185 V300"/>' +
       '<line x1="160" y1="230" x2="186" y2="230"/><line x1="254" y1="230" x2="280" y2="230"/>' +
       '<g stroke-width="1"><line x1="164" y1="200" x2="276" y2="200"/><line x1="164" y1="210" x2="276" y2="210"/></g>' +
+      '<g stroke-width="0.7" opacity="0.6"><line x1="170" y1="160" x2="270" y2="160"/><path d="M170 160 v-6 M190 160 v-6 M210 160 v-6 M230 160 v-6 M250 160 v-6 M270 160 v-6"/></g>' +
+      '<g stroke-width="0.8" opacity="0.7"><circle cx="220" cy="243" r="14" fill="none"/><path d="M212 243 h16 M220 235 v16"/></g>' +
       '<rect x="140" y="300" width="160" height="10" fill="url(#matGrad)"/>' +
       '<rect x="125" y="310" width="190" height="8" fill="#7A3F2C"/>' +
       '<rect x="112" y="320" width="216" height="8" fill="#602F20"/>' +
-      '<line x1="220" y1="150" x2="220" y2="126"/><circle cx="220" cy="120" r="4" fill="#FBEFD2"/>',
+      '<line x1="220" y1="150" x2="220" y2="126"/><circle cx="220" cy="120" r="4" fill="#FBEFD2"/>' +
+      '<g fill="#5F8C6E" opacity="0.85"><circle cx="75" cy="290" r="16"/><circle cx="92" cy="282" r="12"/><circle cx="58" cy="284" r="11"/>' +
+      '<circle cx="365" cy="290" r="16"/><circle cx="348" cy="282" r="12"/><circle cx="382" cy="284" r="11"/></g>' +
+      '<g stroke="#3F5A3A" stroke-width="3" opacity="0.6"><line x1="75" y1="300" x2="75" y2="285"/><line x1="365" y1="300" x2="365" y2="285"/></g>' +
+      '<g stroke-width="0.5" opacity="0.35"><line x1="30" y1="308" x2="410" y2="308"/><line x1="30" y1="316" x2="410" y2="316"/></g>',
 
     hyderabad:
       materialGradient('#E2E5D2', '#8A9576') +
@@ -351,14 +380,24 @@
           out += '<path d="M' + (m.cx - hw - 2) + ' ' + m.topY + ' C ' + (m.cx - hw - 9) + ' ' + (m.topY - 12) + ', ' + (m.cx - hw * 0.5) + ' ' + (m.topY - 28) + ', ' + m.cx + ' ' + (m.topY - 32) +
             ' C ' + (m.cx + hw * 0.5) + ' ' + (m.topY - 28) + ', ' + (m.cx + hw + 9) + ' ' + (m.topY - 12) + ', ' + (m.cx + hw + 2) + ' ' + m.topY + ' Z" fill="url(#matGrad)"/>';
           out += '<line x1="' + m.cx + '" y1="' + (m.topY - 32) + '" x2="' + m.cx + '" y2="' + (m.topY - 46) + '"/><circle cx="' + m.cx + '" cy="' + (m.topY - 49) + '" r="3" fill="#FBEFD2"/>';
+          out += '<g stroke-width="0.6" opacity="0.65">';
+          for (var d = 0; d < 3; d++) {
+            var dy = m.topY + h * 0.42 + d * (h * 0.16);
+            out += '<path d="M' + m.cx + ' ' + (dy - 4) + ' L' + (m.cx + 4) + ' ' + dy + ' L' + m.cx + ' ' + (dy + 4) + ' L' + (m.cx - 4) + ' ' + dy + ' Z"/>';
+          }
+          out += '</g>';
         });
         return out;
       })() +
       '<rect x="165" y="205" width="110" height="95" fill="url(#matGrad)"/>' +
+      '<g stroke-width="0.7" opacity="0.5"><line x1="165" y1="260" x2="275" y2="260"/><line x1="165" y1="280" x2="275" y2="280"/></g>' +
       '<path d="M183 300 V237 A37 37 0 0 1 257 237 V300"/>' +
       '<g stroke-width="1.1"><path d="M165 205 A24 22 0 0 1 209 205"/><path d="M213 205 A11 22 0 0 1 227 205"/><path d="M231 205 A24 22 0 0 1 275 205"/></g>' +
       '<circle cx="220" cy="222" r="8" fill="none" stroke-width="1"/>' +
-      '<g stroke-width="1"><path d="M165 205 h10 v-8 h9 v8 h9 v-8 h9 v8 h9 v-8 h9 v8 h9 v-8 h9 v8 h10"/></g>',
+      '<g stroke-width="0.6" opacity="0.7"><line x1="220" y1="214" x2="220" y2="230"/><line x1="212" y1="222" x2="228" y2="222"/><line x1="214.3" y1="216.3" x2="225.7" y2="227.7"/><line x1="225.7" y1="216.3" x2="214.3" y2="227.7"/></g>' +
+      '<g stroke-width="1"><path d="M165 205 h10 v-8 h9 v8 h9 v-8 h9 v8 h9 v-8 h9 v8 h9 v-8 h9 v8 h10"/></g>' +
+      '<g fill="#B0925A" opacity="0.6" stroke-width="0.7"><path d="M108 260 L150 260 L146 300 L112 300 Z"/><path d="M108 260 Q129 250 150 260"/>' +
+      '<path d="M290 260 L332 260 L328 300 L294 300 Z"/><path d="M290 260 Q311 250 332 260"/></g>',
 
     chennai:
       (function () {
@@ -380,12 +419,21 @@
           var nicheCount = 5 - Math.min(i, 3);
           for (var n = 0; n < nicheCount; n++) {
             var nx = x1b + (x2b - x1b) * (n + 0.5) / nicheCount;
-            out += '<line x1="' + nx + '" y1="' + (t.yb - 4) + '" x2="' + nx + '" y2="' + (t.yb - 11) + '" stroke-width="1"/>';
+            var midY = t.yb - (t.yb - t.yt) * 0.55;
+            out += '<path d="M' + (nx - 4) + ' ' + (t.yb - 3) + ' V' + midY + ' A4 4 0 0 1 ' + (nx + 4) + ' ' + midY + ' V' + (t.yb - 3) + '" stroke-width="0.8"/>';
           }
+          out += '<circle cx="' + (x1b + 4) + '" cy="' + (t.yb - 6) + '" r="2.2" fill="#F0E4C0" opacity="0.8"/>';
+          out += '<circle cx="' + (x2b - 4) + '" cy="' + (t.yb - 6) + '" r="2.2" fill="#F0E4C0" opacity="0.8"/>';
         });
         out += '<path d="M204 180 L236 180 L220 160 Z" fill="#EBC066"/>';
         out += '<circle cx="220" cy="153" r="5" fill="#FBEFD2"/>';
         out += '<rect x="195" y="300" width="50" height="10" fill="#8A5A38"/>';
+        out += '<line x1="290" y1="300" x2="290" y2="185" stroke-width="2.2"/>';
+        out += '<path d="M282 195 h16" stroke-width="1.4"/><path d="M284 205 h12" stroke-width="1.2"/><path d="M286 215 h8" stroke-width="1"/>';
+        out += '<path d="M282 185 L290 172 L298 185 Z" fill="#EBC066"/>';
+        out += '<g stroke-width="1" opacity="0.7"><rect x="60" y="292" width="120" height="8" fill="none"/><rect x="260" y="292" width="120" height="8" fill="none"/></g>';
+        out += '<g stroke-width="0.6" opacity="0.5"><path d="M60 292 v-10 M75 292 v-10 M90 292 v-10 M105 292 v-10 M120 292 v-10 M135 292 v-10 M150 292 v-10 M165 292 v-10' +
+          ' M260 292 v-10 M275 292 v-10 M290 292 v-10 M305 292 v-10 M320 292 v-10 M335 292 v-10 M350 292 v-10 M365 292 v-10"/></g>';
         return out;
       })(),
 
@@ -393,36 +441,59 @@
       materialGradient('#C7D8E1', '#5C7686') +
       '<rect x="82" y="140" width="22" height="160" fill="url(#matGrad)"/>' +
       '<rect x="336" y="140" width="22" height="160" fill="url(#matGrad)"/>' +
+      '<g stroke-width="0.7" opacity="0.5"><line x1="82" y1="170" x2="104" y2="170"/><line x1="82" y1="200" x2="104" y2="200"/><line x1="82" y1="230" x2="104" y2="230"/><line x1="82" y1="260" x2="104" y2="260"/>' +
+      '<line x1="336" y1="170" x2="358" y2="170"/><line x1="336" y1="200" x2="358" y2="200"/><line x1="336" y1="230" x2="358" y2="230"/><line x1="336" y1="260" x2="358" y2="260"/></g>' +
       '<g stroke-width="1.3">' +
       '<path d="M104 155 L150 190 L196 155 L242 190 L288 155 L336 190"/>' +
       '<path d="M104 185 L150 155 L196 185 L242 155 L288 185 L336 155"/>' +
       '<path d="M104 210 L150 235 L196 210 L242 235 L288 210 L336 235"/>' +
       '<path d="M104 240 L150 210 L196 240 L242 210 L288 240 L336 210"/>' +
       '</g>' +
+      '<g stroke-width="0.7" opacity="0.55"><path d="M104 170 L150 172 L196 170 L242 172 L288 170 L336 172"/><path d="M104 225 L150 227 L196 225 L242 227 L288 225 L336 227"/></g>' +
       '<rect x="82" y="245" width="276" height="10" fill="url(#matGrad)"/>' +
+      '<g stroke-width="0.6" opacity="0.6"><line x1="90" y1="245" x2="90" y2="255"/><line x1="115" y1="245" x2="115" y2="255"/><line x1="140" y1="245" x2="140" y2="255"/>' +
+      '<line x1="165" y1="245" x2="165" y2="255"/><line x1="190" y1="245" x2="190" y2="255"/><line x1="215" y1="245" x2="215" y2="255"/>' +
+      '<line x1="240" y1="245" x2="240" y2="255"/><line x1="265" y1="245" x2="265" y2="255"/><line x1="290" y1="245" x2="290" y2="255"/>' +
+      '<line x1="315" y1="245" x2="315" y2="255"/><line x1="340" y1="245" x2="340" y2="255"/></g>' +
+      '<line x1="90" y1="245" x2="90" y2="232" stroke-width="1"/><circle cx="90" cy="228" r="3" fill="#FBEFD2"/>' +
+      '<line x1="350" y1="245" x2="350" y2="232" stroke-width="1"/><circle cx="350" cy="228" r="3" fill="#FBEFD2"/>' +
       '<path d="M40 300 Q95 290 150 300 T260 300 T370 300 T410 300" stroke="#6B7A4A" stroke-width="1.3"/>' +
       '<path d="M40 312 Q95 304 150 312 T260 312 T370 312 T410 312" stroke="#6B7A4A" stroke-width="1.3"/>' +
-      '<path d="M395 296 L420 296 L412 304 L400 304 Z" fill="url(#matGrad)"/>',
+      '<path d="M30 324 Q85 317 140 324 T250 324 T400 324" stroke="#6B7A4A" stroke-width="1"/>' +
+      '<path d="M395 296 L420 296 L412 304 L400 304 Z" fill="url(#matGrad)"/>' +
+      '<path d="M150 305 L172 305 L166 312 L156 312 Z" fill="#8A9576" opacity="0.7"/><line x1="161" y1="305" x2="161" y2="296"/><path d="M161 296 L169 303 L161 303 Z" fill="#8A9576" opacity="0.7"/>',
 
     pune:
       materialGradient('#E29368', '#8A3F26') +
       '<rect x="95" y="205" width="65" height="95" fill="url(#matGrad)"/>' +
       '<rect x="280" y="205" width="65" height="95" fill="url(#matGrad)"/>' +
+      '<g stroke-width="0.6" opacity="0.5"><line x1="95" y1="225" x2="160" y2="225"/><line x1="95" y1="245" x2="160" y2="245"/><line x1="95" y1="265" x2="160" y2="265"/><line x1="95" y1="285" x2="160" y2="285"/>' +
+      '<line x1="280" y1="225" x2="345" y2="225"/><line x1="280" y1="245" x2="345" y2="245"/><line x1="280" y1="265" x2="345" y2="265"/><line x1="280" y1="285" x2="345" y2="285"/></g>' +
       '<g stroke-width="1.1"><path d="M95 205 h11 v-9 h11 v9 h11 v-9 h11 v9 h11 v-9 h10"/></g>' +
       '<g stroke-width="1.1"><path d="M280 205 h11 v-9 h11 v9 h11 v-9 h11 v9 h11 v-9 h10"/></g>' +
+      '<g fill="#3A2810" stroke-width="0.6"><rect x="122" y="235" width="4" height="14" rx="2"/><rect x="122" y="265" width="4" height="14" rx="2"/>' +
+      '<rect x="307" y="235" width="4" height="14" rx="2"/><rect x="307" y="265" width="4" height="14" rx="2"/></g>' +
       '<path d="M170 300 V185 A50 50 0 0 1 270 185 V300 Z" fill="url(#matGrad)"/>' +
+      '<g stroke-width="0.6" opacity="0.5"><path d="M175 220 A45 45 0 0 1 265 220"/></g>' +
       '<path d="M188 300 V210 A32 32 0 0 1 252 210 V300"/>' +
       '<g stroke-width="1">' +
       '<circle cx="196" cy="230" r="2.5" fill="#3A2810"/><circle cx="196" cy="250" r="2.5" fill="#3A2810"/><circle cx="196" cy="270" r="2.5" fill="#3A2810"/>' +
       '<circle cx="220" cy="220" r="2.5" fill="#3A2810"/><circle cx="220" cy="240" r="2.5" fill="#3A2810"/><circle cx="220" cy="260" r="2.5" fill="#3A2810"/><circle cx="220" cy="280" r="2.5" fill="#3A2810"/>' +
       '<circle cx="244" cy="230" r="2.5" fill="#3A2810"/><circle cx="244" cy="250" r="2.5" fill="#3A2810"/><circle cx="244" cy="270" r="2.5" fill="#3A2810"/>' +
       '</g>' +
-      '<rect x="75" y="300" width="290" height="8" fill="#6B331C"/>',
+      '<g fill="#6B9963" opacity="0.8"><circle cx="55" cy="292" r="11"/><circle cx="68" cy="286" r="8"/>' +
+      '<circle cx="385" cy="292" r="11"/><circle cx="372" cy="286" r="8"/></g>' +
+      '<rect x="75" y="300" width="290" height="8" fill="#6B331C"/>' +
+      '<g stroke-width="0.5" opacity="0.4"><line x1="90" y1="304" x2="90" y2="308"/><line x1="130" y1="304" x2="130" y2="308"/><line x1="170" y1="304" x2="170" y2="308"/>' +
+      '<line x1="210" y1="304" x2="210" y2="308"/><line x1="250" y1="304" x2="250" y2="308"/><line x1="290" y1="304" x2="290" y2="308"/><line x1="330" y1="304" x2="330" y2="308"/></g>',
 
     ahmedabad:
       materialGradient('#F5E8C2', '#B0925A') +
+      '<path d="M100 300 V165 A115 115 0 0 1 340 165 V300 Z" fill="url(#matGrad)" opacity="0.35"/>' +
+      '<g stroke-width="0.5" opacity="0.4"><line x1="100" y1="220" x2="340" y2="220"/><line x1="100" y1="260" x2="340" y2="260"/></g>' +
       '<path d="M140 300 V150 A80 80 0 0 1 300 150 V300 Z" fill="url(#matGrad)"/>' +
       '<path d="M140 300 V150 A80 80 0 0 1 300 150 V300"/>' +
+      '<g stroke-width="0.6" opacity="0.6"><path d="M148 300 V158 A72 72 0 0 1 292 158 V300"/></g>' +
       '<g stroke-width="1.3">' +
       '<line x1="220" y1="300" x2="220" y2="178"/>' +
       '<path d="M220 285 L188 255 M220 285 L252 255 M220 258 L192 232 M220 258 L248 232 M220 232 L196 210 M220 232 L244 210 M220 208 L200 188 M220 208 L240 188 M220 186 L204 172 M220 186 L236 172"/>' +
@@ -432,53 +503,88 @@
       '<path d="M188 255 L172 240 M188 255 L178 270 M252 255 L268 240 M252 255 L262 270"/>' +
       '<path d="M192 232 L178 220 M248 232 L262 220"/>' +
       '</g>' +
+      '<g stroke-width="0.55" opacity="0.7"><path d="M172 240 L160 232 M172 240 L165 250 M268 240 L280 232 M268 240 L275 250"/>' +
+      '<circle cx="196" cy="285" r="3"/><circle cx="244" cy="285" r="3"/><circle cx="196" cy="215" r="2.5"/><circle cx="244" cy="215" r="2.5"/></g>' +
       '<path d="M150 172 Q220 142 290 172" stroke-width="1"/>' +
-      '<path d="M155 158 Q220 132 285 158" stroke-width="1"/>',
+      '<path d="M155 158 Q220 132 285 158" stroke-width="1"/>' +
+      '<g stroke-width="0.6" opacity="0.6"><path d="M160 148 Q220 122 280 148"/></g>' +
+      '<g stroke-width="0.5" opacity="0.4"><path d="M105 296 q6 -8 0 -16 q-6 -8 0 -16" transform="translate(0,0)"/><path d="M335 296 q-6 -8 0 -16 q6 -8 0 -16"/></g>',
 
     jaipur:
       materialGradient('#F5B9B9', '#B85D5D') +
+      '<rect x="90" y="160" width="26" height="140" fill="url(#matGrad)" opacity="0.85"/>' +
+      '<rect x="324" y="160" width="26" height="140" fill="url(#matGrad)" opacity="0.85"/>' +
       '<rect x="110" y="130" width="220" height="170" fill="url(#matGrad)"/>' +
       '<path d="M110 130 Q128 116 146 130 T182 130 T218 130 T254 130 T290 130 T326 130" stroke-width="1.2"/>' +
       (function () {
-        var rows = [155, 182, 209, 236, 263];
+        var rows = [155, 182, 209, 236, 263, 290];
         var cols = [130, 160, 190, 220, 250, 280, 310];
         var out = '';
-        rows.forEach(function (y) {
+        rows.forEach(function (y, ri) {
           cols.forEach(function (x) {
             out += '<path d="M' + (x - 7) + ' ' + (y + 9) + ' V' + y + ' A7 7 0 0 1 ' + (x + 7) + ' ' + y + ' V' + (y + 9) + '" stroke-width="1"/>';
+            out += '<circle cx="' + x + '" cy="' + (y - 1) + '" r="1.3" fill="#B85D5D" opacity="0.6"/>';
           });
+          if (ri < rows.length - 1) {
+            out += '<line x1="112" y1="' + (y + 13) + '" x2="328" y2="' + (y + 13) + '" stroke-width="0.5" opacity="0.4"/>';
+          }
         });
         return out;
       })() +
-      '<g stroke-width="1"><path d="M118 130 v-10 M150 130 v-10 M182 130 v-10 M214 130 v-10 M246 130 v-10 M278 130 v-10 M322 130 v-10"/></g>',
+      '<g stroke-width="1"><path d="M118 130 v-10 M150 130 v-10 M182 130 v-10 M214 130 v-10 M246 130 v-10 M278 130 v-10 M322 130 v-10"/></g>' +
+      '<g stroke-width="0.7" opacity="0.6"><path d="M96 175 A6 4 0 0 1 108 175" fill="none"/><path d="M330 175 A6 4 0 0 1 342 175" fill="none"/>' +
+      '<line x1="96" y1="220" x2="108" y2="220"/><line x1="330" y1="220" x2="342" y2="220"/>' +
+      '<line x1="96" y1="260" x2="108" y2="260"/><line x1="330" y1="260" x2="342" y2="260"/></g>' +
+      '<rect x="105" y="300" width="230" height="8" fill="#8A4444"/>' +
+      '<g stroke-width="0.5" opacity="0.4"><line x1="120" y1="304" x2="120" y2="308"/><line x1="150" y1="304" x2="150" y2="308"/><line x1="180" y1="304" x2="180" y2="308"/>' +
+      '<line x1="210" y1="304" x2="210" y2="308"/><line x1="240" y1="304" x2="240" y2="308"/><line x1="270" y1="304" x2="270" y2="308"/><line x1="300" y1="304" x2="300" y2="308"/></g>',
 
     lucknow:
       materialGradient('#EDB27E', '#A3673A') +
       '<path d="M165 300 V205 Q165 150 195 150 Q207 128 220 150 Q233 128 245 150 Q275 150 275 205 V300 Z" fill="url(#matGrad)"/>' +
+      '<g stroke-width="0.6" opacity="0.5"><line x1="165" y1="260" x2="275" y2="260"/><line x1="165" y1="280" x2="275" y2="280"/></g>' +
       '<path d="M190 300 V235 A30 30 0 0 1 250 235 V300"/>' +
+      '<g stroke-width="0.5" opacity="0.6"><path d="M196 290 A24 24 0 0 1 244 290" transform="translate(0,3)"/><path d="M198 275 A22 20 0 0 1 242 275" transform="translate(0,3)"/></g>' +
       '<g stroke-width="1.1">' +
       '<path d="M172 200 Q185 180 200 195 Q207 175 220 192 Q233 175 240 195 Q255 180 268 200"/>' +
       '<path d="M178 178 Q190 162 202 176 Q210 158 220 174 Q230 158 238 176 Q250 162 262 178"/>' +
       '</g>' +
+      '<g stroke-width="0.6" opacity="0.6"><path d="M183 190 Q189 182 195 190"/><path d="M203 187 Q209 179 215 187"/><path d="M225 187 Q231 179 237 187"/><path d="M245 190 Q251 182 257 190"/></g>' +
+      '<g stroke-width="0.5" opacity="0.5"><path d="M175 220 q6 -4 0 -8 q-6 -4 0 -8"/><path d="M265 220 q-6 -4 0 -8 q6 -4 0 -8"/></g>' +
       '<line x1="145" y1="215" x2="145" y2="300" stroke-width="1.5"/><circle cx="145" cy="203" r="9" fill="url(#matGrad)"/><line x1="145" y1="194" x2="145" y2="182"/><circle cx="145" cy="178" r="2.5" fill="#FBEFD2"/>' +
+      '<g stroke-width="0.5" opacity="0.6"><path d="M140 240 h10 M140 260 h10 M140 280 h10"/></g>' +
       '<line x1="295" y1="215" x2="295" y2="300" stroke-width="1.5"/><circle cx="295" cy="203" r="9" fill="url(#matGrad)"/><line x1="295" y1="194" x2="295" y2="182"/><circle cx="295" cy="178" r="2.5" fill="#FBEFD2"/>' +
-      '<g stroke-width="1"><path d="M165 300 h-15 M275 300 h15"/></g>',
+      '<g stroke-width="0.5" opacity="0.6"><path d="M290 240 h10 M290 260 h10 M290 280 h10"/></g>' +
+      '<g stroke-width="1"><path d="M165 300 h-15 M275 300 h15"/></g>' +
+      '<g fill="#5F8C6E" opacity="0.7"><circle cx="115" cy="292" r="10"/><circle cx="325" cy="292" r="10"/></g>',
 
     chandigarh:
       materialGradient('#AEB3B5', '#54585B') +
-      '<g stroke-opacity="0.3" stroke-width="1">' +
+      '<g stroke-opacity="0.28" stroke-width="1">' +
       '<line x1="90" y1="130" x2="90" y2="300"/><line x1="160" y1="110" x2="160" y2="300"/>' +
       '<line x1="280" y1="110" x2="280" y2="300"/><line x1="350" y1="130" x2="350" y2="300"/>' +
       '<line x1="70" y1="175" x2="370" y2="175"/><line x1="70" y1="245" x2="370" y2="245"/>' +
+      '<line x1="125" y1="120" x2="125" y2="300"/><line x1="315" y1="120" x2="315" y2="300"/><line x1="70" y1="210" x2="370" y2="210"/>' +
       '</g>' +
+      '<g fill="url(#matGrad)" opacity="0.5" stroke-width="0.6">' +
+      '<rect x="70" y="230" width="26" height="70"/><rect x="344" y="230" width="26" height="70"/>' +
+      '</g>' +
+      '<g stroke-width="0.4" opacity="0.5"><path d="M72 236 h22 M72 246 h22 M72 256 h22 M72 266 h22 M72 276 h22 M72 286 h22"/>' +
+      '<path d="M346 236 h22 M346 246 h22 M346 256 h22 M346 266 h22 M346 276 h22 M346 286 h22"/></g>' +
+      '<ellipse cx="220" cy="298" rx="60" ry="9" fill="#3A4548" opacity="0.5" stroke-width="0.7"/>' +
       '<line x1="220" y1="300" x2="220" y2="268" stroke-width="3"/>' +
       '<path d="M195 300 L245 300 L235 308 L205 308 Z" fill="url(#matGrad)"/>' +
       '<rect x="193" y="218" width="54" height="50" rx="16" fill="url(#matGrad)"/>' +
+      '<g stroke-width="0.6" opacity="0.6"><path d="M205 225 v35 M220 220 v40 M235 225 v35"/></g>' +
       '<rect x="190" y="182" width="10" height="38" rx="5" fill="url(#matGrad)" transform="rotate(-45 195 220)"/>' +
       '<rect x="200" y="168" width="10" height="52" rx="5" fill="url(#matGrad)" transform="rotate(-12 205 220)"/>' +
       '<rect x="215" y="162" width="10" height="58" rx="5" fill="url(#matGrad)"/>' +
       '<rect x="230" y="170" width="10" height="50" rx="5" fill="url(#matGrad)" transform="rotate(10 235 220)"/>' +
-      '<rect x="243" y="180" width="10" height="40" rx="5" fill="url(#matGrad)" transform="rotate(24 248 220)"/>',
+      '<rect x="243" y="180" width="10" height="40" rx="5" fill="url(#matGrad)" transform="rotate(24 248 220)"/>' +
+      '<g stroke-width="0.5" opacity="0.6"><line x1="195" y1="196" x2="195" y2="204" transform="rotate(-45 195 220)"/>' +
+      '<line x1="205" y1="182" x2="205" y2="190" transform="rotate(-12 205 220)"/>' +
+      '<line x1="220" y1="176" x2="220" y2="184"/>' +
+      '<line x1="235" y1="184" x2="235" y2="192" transform="rotate(10 235 220)"/></g>',
 
     kochi:
       materialGradient('#CBA05A', '#6E4B22') +
@@ -487,33 +593,52 @@
       '<line x1="130" y1="225" x2="235" y2="252"/>' +
       '<line x1="130" y1="260" x2="248" y2="280"/>' +
       '<path d="M205 140 L335 165 L252 272 L205 205 Z" fill="url(#matGrad)" fill-opacity="0.6"/>' +
-      '<g stroke-width="0.8">' +
-      '<line x1="215" y1="160" x2="270" y2="230"/><line x1="235" y1="155" x2="285" y2="220"/><line x1="255" y1="152" x2="300" y2="205"/>' +
-      '<line x1="220" y1="180" x2="300" y2="195"/><line x1="222" y1="205" x2="290" y2="215"/>' +
-      '</g>' +
+      '<g stroke-width="0.8"><line x1="215" y1="160" x2="270" y2="230"/><line x1="235" y1="155" x2="285" y2="220"/><line x1="255" y1="152" x2="300" y2="205"/>' +
+      '<line x1="220" y1="180" x2="300" y2="195"/><line x1="222" y1="205" x2="290" y2="215"/></g>' +
+      '<g stroke-width="0.45" opacity="0.7"><line x1="220" y1="152" x2="260" y2="248"/><line x1="240" y1="148" x2="278" y2="238"/>' +
+      '<line x1="216" y1="192" x2="290" y2="205"/><line x1="214" y1="215" x2="280" y2="223"/></g>' +
       '<line x1="235" y1="252" x2="185" y2="288"/><circle cx="185" cy="294" r="5" fill="#3A2810"/>' +
       '<line x1="248" y1="280" x2="205" y2="298"/>' +
+      '<g opacity="0.55"><line x1="90" y1="300" x2="130" y2="200" stroke-width="1.6"/><path d="M130 200 L200 215 L155 265 L130 235 Z" fill="url(#matGrad)" fill-opacity="0.4" stroke-width="0.6"/>' +
+      '<line x1="90" y1="255" x2="150" y2="270" stroke-width="0.6"/><line x1="150" y1="265" x2="110" y2="292"/><circle cx="110" cy="296" r="3.5" fill="#3A2810"/></g>' +
+      '<path d="M355 260 L378 267 L370 273 L350 267 Z" fill="#8A6A2E" opacity="0.7"/>' +
+      '<circle cx="270" cy="290" r="2" fill="#2FB0AC" opacity="0.7"/><circle cx="300" cy="296" r="1.6" fill="#2FB0AC" opacity="0.6"/>' +
       '<path d="M30 300 Q85 291 140 300 T250 300 T350 300 T410 300" stroke="#2FB0AC" stroke-width="1.3"/>' +
-      '<path d="M30 312 Q85 305 140 312 T250 312 T350 312 T410 312" stroke="#2FB0AC" stroke-width="1.3"/>',
+      '<path d="M30 312 Q85 305 140 312 T250 312 T350 312 T410 312" stroke="#2FB0AC" stroke-width="1.3"/>' +
+      '<path d="M20 324 Q75 316 130 324 T240 324 T400 324" stroke="#2FB0AC" stroke-width="1"/>',
 
     vizag:
       materialGradient('#8FC280', '#4E7645') +
       '<path d="M40 300 Q130 195 240 300 Z" fill="url(#matGrad)"/>' +
       '<path d="M40 300 Q130 195 240 300"/>' +
+      '<g stroke-width="0.6" opacity="0.55"><path d="M60 290 q8 -20 20 -8"/><path d="M90 270 q8 -18 18 -6"/><path d="M120 250 q8 -16 16 -5"/><path d="M150 260 q7 -15 15 -5"/><path d="M180 275 q6 -12 13 -4"/></g>' +
       '<circle cx="150" cy="255" r="3" fill="#F0DFAF"/>' +
+      '<line x1="150" y1="255" x2="150" y2="235" stroke-width="0.7" opacity="0.6"/><path d="M144 237 L150 228 L156 237 Z" fill="#4E7645" opacity="0.6"/>' +
       '<rect x="298" y="182" width="14" height="17.5" fill="#D64B3D"/>' +
       '<rect x="298" y="199.5" width="14" height="17.5" fill="#EDE6D2"/>' +
       '<rect x="298" y="217" width="14" height="17.5" fill="#D64B3D"/>' +
       '<rect x="298" y="234.5" width="14" height="17.5" fill="#EDE6D2"/>' +
+      '<g stroke-width="0.5" opacity="0.5"><line x1="298" y1="182" x2="312" y2="182"/><line x1="298" y1="217" x2="312" y2="217"/><line x1="298" y1="252" x2="312" y2="252"/></g>' +
       '<path d="M296 182 h18"/><path d="M300 168 h10"/><path d="M305 182 v-14"/>' +
       '<circle cx="305" cy="173" r="5" fill="#FBEFD2"/>' +
+      '<g stroke="#FBEFD2" stroke-width="0.5" opacity="0.5"><path d="M305 173 L320 168"/><path d="M305 173 L318 178"/><path d="M305 173 L292 178"/></g>' +
       '<g stroke-width="1"><line x1="298" y1="200" x2="312" y2="200"/><line x1="298" y1="218" x2="312" y2="218"/><line x1="298" y1="236" x2="312" y2="236"/></g>' +
+      '<rect x="295" y="252" width="20" height="8" fill="#3A5A46" opacity="0.6"/>' +
+      '<path d="M330 260 L345 254 L346 264 Z" fill="#4E7645" opacity="0.5"/><line x1="345" y1="259" x2="345" y2="300" stroke-width="1" opacity="0.6"/>' +
+      '<circle cx="80" cy="120" r="18" fill="#F0DFAF" opacity="0.35"/>' +
       '<path d="M20 300 Q80 289 140 300 T260 300 T360 300 T410 300" stroke="#2FB0AC" stroke-width="1.3"/>' +
       '<path d="M20 313 Q80 304 140 313 T260 313 T360 313 T410 313" stroke="#2FB0AC" stroke-width="1.3"/>' +
       '<path d="M20 326 Q80 318 140 326 T260 326 T360 326 T410 326" stroke="#2FB0AC" stroke-width="1.3"/>'
   };
 
   function heroVisualShell(innerSvg) {
+    // The sky gradient and sun glow now live in CSS on .hero (they were
+    // always identical across cities anyway, so nothing is lost) -- this
+    // lets the atmosphere stretch full-bleed with zero risk of cropping.
+    // preserveAspectRatio="xMaxYMax meet" scales the illustration to fit
+    // entirely within frame (never cropped, so domes/finials survive any
+    // aspect ratio) and anchors it to the bottom-right, matching where
+    // the CSS glow is positioned.
     return '<svg viewBox="0 0 440 360" preserveAspectRatio="xMaxYMax meet" class="landmark-svg">' +
       '<defs>' +
       '<radialGradient id="groundShadow" cx="220" cy="300" r="170" gradientUnits="userSpaceOnUse">' +
@@ -807,9 +932,6 @@
       card.addEventListener('click', function () {
         if (city.available) {
           if (locationSelect.disabled) {
-            // Locations for this city haven't finished loading yet — queue
-            // the pick and apply it the moment they arrive, rather than
-            // silently failing to find a match in an empty dropdown.
             pendingLocalitySelection = { cityKey: selectedCityKey, name: locality.name };
           } else {
             var match = findMatchingLocationOption(locality.name);
@@ -839,6 +961,11 @@
 
   /* ------------------------------------------------------------------
      Loading the selected city's locations for the dropdown
+     NOTE ON URLS: bhk.html is served separately from Flask (e.g. via Live
+     Server on http://127.0.0.1:5500) while Flask runs on :5000 — different
+     origins, so API_BASE is hardcoded and server.py needs CORS enabled
+     (flask-cors) for both GET and POST. If you later serve bhk.html FROM
+     Flask itself, switch API_BASE back to '' so paths stay relative.
      ------------------------------------------------------------------ */
 
   function loadCityLocations(cityKey) {
@@ -908,6 +1035,10 @@
 
   /* ------------------------------------------------------------------
      Form submit -> validate -> call the selected city's predict endpoint
+     Absolute rule: only ever fires for a city that is `available` and has
+     a real `endpoint` — enforced here even though the UI already hides
+     the form for every other city, so this can never fire a request
+     against one city's model on another city's behalf.
      ------------------------------------------------------------------ */
 
   function handlePredictSubmit(event) {
