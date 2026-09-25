@@ -6,7 +6,7 @@
    ARCHITECTURE
    ------------
    CITIES is the single source of truth for every city's content. Only
-   Bengaluru, Mumbai, Delhi and Chennai currently have `available: true` and real endpoint
+   Bengaluru, Delhi, Chennai and Mumbai currently have `available: true` and real endpoint
    paths — every other city has `available: false` and `endpoint: null`.
    selectCity()
    re-renders the page from this object; nothing city-specific is hardcoded
@@ -738,6 +738,48 @@
 
     var startCity = getCityFromUrl();
     selectCity(CITIES[startCity] ? startCity : 'bengaluru');
+    preloadLiveCityLocations();
+  }
+
+  /* ------------------------------------------------------------------
+     "Built With" stats — the localities figure is summed from what the
+     API actually returns for each live city, so it can't drift out of
+     sync with the models. Cities load lazily as they're selected, so we
+     also kick off a background fetch for any live city not yet loaded.
+     ------------------------------------------------------------------ */
+
+  function preloadLiveCityLocations() {
+    CITY_ORDER.forEach(function (key) {
+      var city = CITIES[key];
+      if (!city.available || locationOptionsByCity[key]) return;
+      if (key === selectedCityKey) return; // already being fetched by selectCity
+
+      fetch(API_BASE + city.locationsEndpoint + '?city=' + encodeURIComponent(key))
+        .then(function (r) { return r.ok ? r.json() : null; })
+        .then(function (data) {
+          if (!data || !Array.isArray(data.location)) return;
+          locationOptionsByCity[key] = data.location;
+          locationCountsByCity[key] = data.location.length;
+          renderLocalitiesStat();
+        })
+        .catch(function () { /* stat just stays as-is */ });
+    });
+    renderLocalitiesStat();
+  }
+
+  function renderLocalitiesStat() {
+    var el = document.getElementById('statLocalities');
+    if (!el) return;
+
+    var total = 0, haveAny = false;
+    CITY_ORDER.forEach(function (key) {
+      if (CITIES[key].available && typeof locationCountsByCity[key] === 'number') {
+        total += locationCountsByCity[key];
+        haveAny = true;
+      }
+    });
+
+    el.textContent = haveAny ? total.toLocaleString('en-IN') : '\u2014';
   }
 
   /* ------------------------------------------------------------------
@@ -1014,6 +1056,7 @@
     var sorted = locations.slice().sort(function (a, b) { return String(a).localeCompare(String(b)); });
 
     locationCountsByCity[cityKey] = sorted.length;
+    renderLocalitiesStat(); // before the early return — the count is valid even if this city isn't on screen
 
     if (selectedCityKey !== cityKey) return;
 

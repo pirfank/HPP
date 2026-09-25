@@ -102,14 +102,14 @@
 
               <div class="form-row">
                 <div class="form-group">
-                  <label for="bhkSelect" class="form-label">BHK</label>
+                  <label for="bhkSelect" class="form-label">Bedrooms</label>
                   <select id="bhkSelect" name="bhk" class="form-select" required aria-describedby="bhkError">
-                    <option value="">Select BHK</option>
-                    <option value="1">1 BHK</option>
-                    <option value="2">2 BHK</option>
-                    <option value="3">3 BHK</option>
-                    <option value="4">4 BHK</option>
-                    <option value="5">5+ BHK</option>
+                    <option value="">Select Bedrooms</option>
+                    <option value="1">1 </option>
+                    <option value="2">2 </option>
+                    <option value="3">3 </option>
+                    <option value="4">4 </option>
+                    <option value="5">5+ </option>
                   </select>
                   <p class="form-error" id="bhkError"></p>
                 </div>
@@ -246,14 +246,14 @@
       <div class="section-container about-grid">
         <div class="about-text">
           <p class="eyebrow">About the Platform</p>
-          <h2 class="section-heading">A Growing Indian Property Platform</h2>
+          <h2 class="section-heading">Estimating Homes Across India</h2>
           <p class="section-text">
-            This platform uses machine-learning regression models to estimate property prices across
-            India's major metros. Bengaluru is the first city with a live prediction model, trained
-            on local housing data across location, area, BHK, and number of bathrooms.
+            This platform uses machine-learning regression models to estimate home prices across
+            India's major metros. Each live city has its own model, trained on that city's housing
+            data across location, area, BHK, and number of bathrooms.
           </p>
           <p class="section-text">
-            Results are estimates, not appraisals. Actual property prices can vary based on factors
+            Results are estimates, not appraisals. Actual prices can vary based on factors
             such as property condition, exact location, amenities, age of the building, and current
             market conditions.
           </p>
@@ -262,7 +262,64 @@
           <span class="about-badge">Regression Model</span>
           <span class="about-badge">Location-Aware</span>
           <span class="about-badge">Instant Estimates</span>
-          <span class="about-badge">13 Cities &middot; Bengaluru Live</span>
+          <span class="about-badge">13 Cities &middot; 4 Live</span>
+        </div>
+      </div>
+
+      <!-- Tech stack + dataset scale -->
+      <div class="section-container stack-block">
+        <p class="eyebrow">Under the Hood</p>
+        <h3 class="stack-heading">Built With</h3>
+
+        <div class="stack-grid">
+          <div class="stack-group">
+            <p class="stack-group-label">Machine Learning</p>
+            <ul class="stack-list">
+              <li>Python</li>
+              <li>scikit-learn</li>
+              <li>pandas &amp; NumPy</li>
+              <li>Linear Regression</li>
+            </ul>
+          </div>
+
+          <div class="stack-group">
+            <p class="stack-group-label">Backend</p>
+            <ul class="stack-list">
+              <li>Flask</li>
+              <li>Flask-CORS</li>
+              <li>Pickle model artifacts</li>
+              <li>JSON REST API</li>
+            </ul>
+          </div>
+
+          <div class="stack-group">
+            <p class="stack-group-label">Frontend</p>
+            <ul class="stack-list">
+              <li>HTML5</li>
+              <li>CSS3</li>
+              <li>Vanilla JavaScript</li>
+              <li>Inline SVG illustration</li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="stack-stats">
+          <div class="stat">
+            <span class="stat-value">50,000+</span>
+            <span class="stat-label">Training records</span>
+          </div>
+          <div class="stat">
+            <span class="stat-value">4</span>
+            <span class="stat-label">Trained city models</span>
+          </div>
+          <div class="stat">
+            <span class="stat-value">4</span>
+            <span class="stat-label">Input features</span>
+          </div>
+          <div class="stat">
+            <span class="stat-value" id="statLocalities">&mdash;</span>
+            <span class="stat-label">Localities covered</span>
+          </div>
         </div>
       </div>
     </section>
@@ -270,8 +327,7 @@
 
   <footer class="footer">
     <div class="footer-container">
-      <p class="footer-brand">Home Price Predictor</p>
-      <p class="footer-tagline">Built with Python &bull; Flask &bull; Machine Learning &mdash; Made in the Garden City</p>
+      <p class="footer-copyright">&copy; 2026 Home Price Predictor. All rights reserved.</p>
     </div>
   </footer>
 
