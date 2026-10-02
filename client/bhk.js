@@ -1297,4 +1297,16 @@
     return div.innerHTML;
   }
 
+  /* ------------------------------------------------------------------
+     Email obfuscation for footer contact link
+     ------------------------------------------------------------------ */
+
+  document.addEventListener('DOMContentLoaded', function() {
+    var contactLink = document.querySelector('.footer-contact');
+    if (contactLink && contactLink.hasAttribute('data-email')) {
+      contactLink.href = 'mailto:' + contactLink.getAttribute('data-email');
+      contactLink.removeAttribute('data-email');
+    }
+  });
+
 })();
